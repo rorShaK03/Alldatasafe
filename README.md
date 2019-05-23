@@ -6,4 +6,3 @@ An android application for encrypted data saving on external memory devices
 * NFC-devices
 * Paper(with help of QR-codes)
 * Flash-memory devices
-//
