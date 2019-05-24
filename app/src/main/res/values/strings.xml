@@ -1,4 +1,8 @@
-<resources>
+<resources tools:ignore="ExtraTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Cryptosaver</string>
     <string name="action_settings">Settings</string>
+    <string name="text_nfc">NFC</string>
+    <string name="str_qr">QR-код</string>
+    <string name="str_server">Наш сервер</string>
+    <string name="str_chs_place">Выберите место для хранения зашифрованных данных</string>
 </resources>
