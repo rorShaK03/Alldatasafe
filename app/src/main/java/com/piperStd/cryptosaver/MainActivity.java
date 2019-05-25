@@ -1,20 +1,18 @@
 package com.piperStd.cryptosaver;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
-import android.view.View;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.material.navigation.NavigationView;
+
 public class MainActivity extends AppCompatActivity {
-    CardView nfcCard;
-    CardView qrCard;
-    CardView serverCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,24 +20,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        nfcCard = findViewById(R.id.card_nfc);
-        qrCard = findViewById(R.id.card_qr);
-        serverCard = findViewById(R.id.card_server);
-
-        View.OnTouchListener cardTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motion) {
-                if(motion.getAction() == MotionEvent.ACTION_DOWN)
-                    ((CardView)view).setCardElevation(4);
-                else if(motion.getAction() == MotionEvent.ACTION_UP)
-                    ((CardView)view).setCardElevation(6);
-                return true;
-            }
-        };
-
-        nfcCard.setOnTouchListener(cardTouchListener);
-        qrCard.setOnTouchListener(cardTouchListener);
-        serverCard.setOnTouchListener(cardTouchListener);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigation = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
 
