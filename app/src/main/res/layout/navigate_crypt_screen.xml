@@ -9,7 +9,7 @@
     >
 
     <include
-        layout="@layout/content_main"
+        layout="@layout/crypt_screen"
         />
 
 

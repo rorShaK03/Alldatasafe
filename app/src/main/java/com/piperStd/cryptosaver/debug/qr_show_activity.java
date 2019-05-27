@@ -1,25 +1,21 @@
-package com.piperStd.cryptosaver;
+package com.piperStd.cryptosaver.debug;
 
-import android.os.Bundle;
-import android.content.Intent;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.view.menu.MenuView;
 import android.view.MenuItem;
-import android.view.View;
-import com.piperStd.cryptosaver.debug.qr_show_activity;
+import android.os.Bundle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.cryptosaver.R;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class qr_show_activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navigate_crypt_screen);
+        setContentView(R.layout.navigate_qr_show_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
@@ -27,15 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        AppCompatButton nextBtn = findViewById(R.id.button);
-        nextBtn.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        Intent intent = new Intent(this, qr_show_activity.class);
-        startActivity(intent);
     }
 
 }
