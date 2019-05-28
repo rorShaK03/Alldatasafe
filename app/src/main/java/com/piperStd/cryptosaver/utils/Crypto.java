@@ -20,8 +20,8 @@ public class Crypto {
 
     public String password;
     public byte[] data;
-    public byte[] decrypted;
-    public byte[] encrypted = null;
+    private byte[] decrypted;
+    private byte[] encrypted = null;
     public Credentials credentials = new Credentials();
 
     public Crypto(byte[] data, String password)
@@ -81,18 +81,20 @@ public class Crypto {
         credentials.key = getSHA256(passBytes);
     }
 
-    public void encryptStr(String text, String password)
+    public byte[] encrypt()
     {
-        decrypted = tools.toBytes(text);
+        decrypted = data;
         KDF(password);
         AES256CBC_encrypt();
+        return encrypted;
     }
 
-    public void decrypt(byte[] data, String password)
+    public byte[] decrypt(byte[] data, String password)
     {
         encrypted = data;
         KDF(password);
         AES256CBC_decrypt();
+        return decrypted;
     }
 
     public byte[] genCredentialsArr()
@@ -104,9 +106,11 @@ public class Crypto {
         }
         for(int i = credentials.key.length; i < credentials.key.length + credentials.iv.length; i++)
         {
-            res[i] = credentials.iv[i];
+            res[i] = credentials.iv[i - credentials.key.length];
         }
         return res;
     }
+
+
 }
 

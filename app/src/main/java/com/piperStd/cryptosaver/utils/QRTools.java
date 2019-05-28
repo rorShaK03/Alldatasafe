@@ -10,9 +10,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-public class qr_tools
+public class QRTools
 {
-    public Bitmap genBarcode(byte[] data)
+    public static Bitmap genBarcode(byte[] data)
     {
         Bitmap bitmap = null;
         String base64encoded = Base64.encodeToString(data, Base64.DEFAULT);
