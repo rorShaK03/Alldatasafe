@@ -48,7 +48,7 @@ public class Crypto {
     {
         Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
+            cipher = Cipher.getInstance("AES_256/CBC/PKCS7PADDING");
             SecretKey key = new SecretKeySpec(credentials.key, 0, credentials.key.length, "AES256");
             cipher.init(Cipher.ENCRYPT_MODE, key);
             encrypted = cipher.doFinal(decrypted);
@@ -64,7 +64,7 @@ public class Crypto {
     {
         Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
+            cipher = Cipher.getInstance("AES_256/CBC/PKCS7PADDING");
             SecretKey key = new SecretKeySpec(credentials.key, 0, credentials.key.length, "AES256");
             cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(credentials.iv));
             decrypted = cipher.doFinal(encrypted);
@@ -110,7 +110,5 @@ public class Crypto {
         }
         return res;
     }
-
-
 }
 
