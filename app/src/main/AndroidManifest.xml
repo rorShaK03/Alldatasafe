@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".debug.qr_show_activity"
+        <activity android:name=".qr_show_activity"
             android:theme = "@style/AppTheme.NoActionBar">
 
         </activity>

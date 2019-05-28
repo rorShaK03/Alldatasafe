@@ -1,4 +1,4 @@
-package com.piperStd.cryptosaver.debug;
+package com.piperStd.cryptosaver;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;

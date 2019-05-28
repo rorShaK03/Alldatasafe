@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.piperStd.cryptosaver"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -16,12 +16,6 @@ android {
             useProguard true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".release"
-        }
-        debug {
-            useProguard false
-            minifyEnabled false
-            debuggable true
-            applicationIdSuffix ".debug"
         }
     }
 }
