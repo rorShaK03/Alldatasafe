@@ -1,14 +1,13 @@
 package com.piperStd.cryptosaver.utils;
 
-import android.util.Log;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import static com.piperStd.cryptosaver.utils.tools.showException;
 
 class Credentials
 {
@@ -37,9 +36,9 @@ public class Crypto {
         {
             md = MessageDigest.getInstance("SHA-256");
         }
-        catch(NoSuchAlgorithmException e)
+        catch(Exception e)
         {
-            Log.d("Cryptography exception", e.getMessage());
+            showException(this, "Couldn`t get SHA-256 hash: " + e.getMessage());
         }
         return md.digest(data);
     }
@@ -48,7 +47,7 @@ public class Crypto {
     {
         Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance("AES_256/CBC/PKCS7PADDING");
+            cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
             SecretKey key = new SecretKeySpec(credentials.key, 0, credentials.key.length, "AES256");
             cipher.init(Cipher.ENCRYPT_MODE, key);
             encrypted = cipher.doFinal(decrypted);
@@ -56,7 +55,7 @@ public class Crypto {
         }
         catch(Exception e)
         {
-            Log.e("Cryptography exception", e.getMessage());
+            showException(this, "Couldn`t encrypt message with AES-256: " + e.getMessage());
         }
     }
 
@@ -64,14 +63,14 @@ public class Crypto {
     {
         Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance("AES_256/CBC/PKCS7PADDING");
+            cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
             SecretKey key = new SecretKeySpec(credentials.key, 0, credentials.key.length, "AES256");
             cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(credentials.iv));
             decrypted = cipher.doFinal(encrypted);
         }
         catch(Exception e)
         {
-            Log.e("Cryptography exception", e.getMessage());
+            showException(this, "Couldn`t decrypt message with AES-256: " + e.getMessage());
         }
     }
 
@@ -97,16 +96,16 @@ public class Crypto {
         return decrypted;
     }
 
-    public byte[] genCredentialsArr()
+    public byte[] genEncryptedDataArr()
     {
-        byte[] res = new byte[credentials.key.length + credentials.iv.length];
-        for(int i = 0; i < credentials.key.length; i++)
+        byte[] res = new byte[encrypted.length + credentials.iv.length];
+        for(int i = 0; i < credentials.iv.length; i++)
         {
-            res[i] = credentials.key[i];
+            res[i] = credentials.iv[i];
         }
-        for(int i = credentials.key.length; i < credentials.key.length + credentials.iv.length; i++)
+        for(int i = credentials.iv.length; i < credentials.iv.length + encrypted.length; i++)
         {
-            res[i] = credentials.iv[i - credentials.key.length];
+            res[i] = encrypted[i - credentials.iv.length];
         }
         return res;
     }

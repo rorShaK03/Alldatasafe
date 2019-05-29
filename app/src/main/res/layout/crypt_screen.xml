@@ -51,6 +51,7 @@
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:id = "@+id/placeGroup"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatRadioButton
@@ -83,34 +84,19 @@
             android:layout_marginBottom="40dp"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textTypeInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/need_save" />
 
-            <RadioGroup
-                android:layout_width="280dp"
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
+                android:text="Впишите текст для шифрования" />
 
-                <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/radioText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/str_text" />
-
-                <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/radioPass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/str_pass" />
-
-            </RadioGroup>
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
         </LinearLayout>
 
         <LinearLayout

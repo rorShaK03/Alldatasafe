@@ -17,7 +17,11 @@ import com.piperStd.cryptosaver.utils.Crypto;
 import com.piperStd.cryptosaver.utils.QRTools;
 import com.piperStd.cryptosaver.utils.tools;
 
+import static com.piperStd.cryptosaver.utils.tools.showException;
+
 public class qr_show_activity extends AppCompatActivity {
+
+    ImageView qrImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +34,29 @@ public class qr_show_activity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        ImageView qrImage = findViewById(R.id.imageView);
-        String text = "Hello world!";
-        String password = "1234567";
+        qrImage = findViewById(R.id.imageView);
+
+
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
         try
         {
+            Bundle extras = getIntent().getExtras();
+            String text = (String)extras.get("text");
+            String password = (String)extras.get("pass");
+            Log.d("text", text);
+            Log.d("pass", password);
             Crypto crypto = new Crypto(tools.toBytes(text), password);
             crypto.encrypt();
-            qrImage.setImageBitmap(QRTools.genBarcode(crypto.genCredentialsArr()));
+            qrImage.setImageBitmap(QRTools.genBarcode(crypto.genEncryptedDataArr()));
         }
         catch(Exception e)
         {
-            Log.e("Error", e.getMessage());
+            showException(this, "Unable to start qr_show_activity: " + e.getMessage());
         }
 
     }

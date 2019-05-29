@@ -9,9 +9,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+
+import static com.piperStd.cryptosaver.utils.tools.*;
 
 import com.google.android.material.navigation.NavigationView;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,8 +39,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view)
     {
-        Intent intent = new Intent(this, qr_show_activity.class);
-        startActivity(intent);
+
+        RadioGroup place = findViewById(R.id.placeGroup);
+        int placeId = place.getCheckedRadioButtonId();
+        EditText editText = findViewById(R.id.editText);
+        String text = editText.getText().toString();
+        EditText editPass = findViewById(R.id.editPass);
+        String pass = editPass.getText().toString();
+        if(text.length() != 0 && pass.length() != 0) {
+            switch (placeId) {
+                case R.id.radioNFC:
+                    break;
+                case R.id.radioQR:
+                    launchQRCodeActivity(text, pass);
+                    break;
+                case R.id.radioServer:
+                    break;
+                default:
+                    showException(this, "Choose place for saving");
+            }
+        }
+        else if(text.length() == 0)
+        {
+            showException(this, "Text is empty");
+        }
+        else if(pass.length() == 0)
+        {
+            showException(this, "Pass is empty");
+        }
+
+    }
+
+    private void launchQRCodeActivity(String text, String password)
+    {
+        try {
+            Intent intent = new Intent(this, qr_show_activity.class);
+            intent.putExtra("text", text);
+            intent.putExtra("pass", password);
+            startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
     }
 
 }
+
