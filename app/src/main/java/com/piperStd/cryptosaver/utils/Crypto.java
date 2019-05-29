@@ -19,9 +19,9 @@ public class Crypto {
 
     public String password;
     public byte[] data;
-    private byte[] decrypted;
+    private byte[] decrypted = null;
     private byte[] encrypted = null;
-    public Credentials credentials = new Credentials();
+    private Credentials credentials = new Credentials();
 
     public Crypto(byte[] data, String password)
     {
@@ -32,15 +32,17 @@ public class Crypto {
     private byte[] getSHA256(byte[] data)
     {
         MessageDigest md = null;
+        byte[] hash = null;
         try
         {
             md = MessageDigest.getInstance("SHA-256");
+            hash = md.digest(data);
         }
         catch(Exception e)
         {
             showException(this, "Couldn`t get SHA-256 hash: " + e.getMessage());
         }
-        return md.digest(data);
+        return hash;
     }
 
     private void AES256CBC_encrypt()
@@ -108,6 +110,11 @@ public class Crypto {
             res[i] = encrypted[i - credentials.iv.length];
         }
         return res;
+    }
+
+    public Credentials getCredentials()
+    {
+        return credentials;
     }
 }
 
