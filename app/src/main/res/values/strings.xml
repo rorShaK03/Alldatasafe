@@ -4,16 +4,10 @@
     <string name="str_nfc">NFC</string>
     <string name="str_qr">QR-код</string>
     <string name="str_server">Наш сервер</string>
-    <string name="str_text">Текст</string>
-    <string name="str_pass">Пароль </string>
     <string name="encryption_pass">Пароль шифрования</string>
     <string name="need_save">Нужно сохранить</string>
     <string name="str_chs_place">Выберите место для хранения зашифрованных данных</string>
     <string name="next">Далее</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="abilities">Возможности</string>
@@ -21,10 +15,4 @@
     <string name="decrypt">Расшифровка</string>
     <string name="info">Информация</string>
     <string name="about">О приложении</string>
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
 </resources>

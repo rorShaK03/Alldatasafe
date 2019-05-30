@@ -1,6 +1,8 @@
 package com.piperStd.cryptosaver.utils;
 
 
+import android.util.Base64;
+
 import java.security.MessageDigest;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -107,6 +109,11 @@ public class Crypto {
             res[i] = encrypted[i - credentials.iv.length];
         }
         return res;
+    }
+
+    public String genBase64FromEncryptedData()
+    {
+        return Base64.encodeToString(genEncryptedDataArr(), Base64.DEFAULT);
     }
 
     public Credentials getCredentials()

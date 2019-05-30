@@ -15,4 +15,21 @@ public class tools
     {
         Log.e(obj.getClass().getName(), info);
     }
+
+    public static void showException(String tag, String info)
+    {
+        Log.e(tag, info);
+    }
+
+    static <T> boolean contains(T[] arr, T item)
+    {
+        for(int i = 0; i < arr.length; i++)
+        {
+            if(arr[i].equals(item))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

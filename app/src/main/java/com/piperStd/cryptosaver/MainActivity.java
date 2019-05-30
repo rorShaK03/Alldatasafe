@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         try {
             Intent intent = new Intent(this, qr_show_activity.class);
-            intent.putExtra("text", text);
-            intent.putExtra("pass", password);
+            intent.putExtra("com.piperstd.cryptosaver.EXTRA_TEXT", text);
+            intent.putExtra("com.piperstd.cryptosaver.EXTRA_PASS", password);
             startActivity(intent);
         }
         catch(Exception e)
@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         try {
             Intent intent = new Intent(this, NFC_write_activity.class);
-            intent.putExtra("text", text);
-            intent.putExtra("pass", password);
+            intent.putExtra("com.piperstd.cryptosaver.EXTRA_TEXT", text);
+            intent.putExtra("com.piperstd.cryptosaver.EXTRA_PASS", password);
             startActivity(intent);
         }
         catch(Exception e)

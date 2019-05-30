@@ -49,8 +49,8 @@ public class qr_show_activity extends AppCompatActivity {
         try
         {
             Bundle extras = getIntent().getExtras();
-            String text = (String)extras.get("text");
-            String password = (String)extras.get("pass");
+            String text = (String)extras.get("com.piperstd.cryptosaver.EXTRA_TEXT");
+            String password = (String)extras.get("com.piperstd.cryptosaver.EXTRA_PASS");
             Crypto crypto = new Crypto(tools.toBytes(text), password);
             crypto.encrypt();
             qrImage.setImageBitmap(QR.genBarcode(crypto.genEncryptedDataArr()));
