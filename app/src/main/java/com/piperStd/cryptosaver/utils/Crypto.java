@@ -9,11 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import static com.piperStd.cryptosaver.utils.tools.showException;
 
-class Credentials
-{
-    public byte[] key;
-    public byte[] iv;
-}
+
 
 public class Crypto {
 
@@ -21,12 +17,13 @@ public class Crypto {
     public byte[] data;
     private byte[] decrypted = null;
     private byte[] encrypted = null;
-    private Credentials credentials = new Credentials();
+    private Credentials credentials;
 
     public Crypto(byte[] data, String password)
     {
         this.data = data;
         this.password = password;
+        credentials = new Credentials();
     }
 
     private byte[] getSHA256(byte[] data)

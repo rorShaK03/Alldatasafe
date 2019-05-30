@@ -10,7 +10,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-public class QRTools
+public class QR
 {
     public static Bitmap genBarcode(byte[] data)
     {

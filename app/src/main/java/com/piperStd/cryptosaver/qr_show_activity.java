@@ -5,16 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
-import android.view.MenuItem;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.ViewFlipper;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.piperStd.cryptosaver.R;
 import com.piperStd.cryptosaver.utils.Crypto;
-import com.piperStd.cryptosaver.utils.QRTools;
+import com.piperStd.cryptosaver.utils.QR;
 import com.piperStd.cryptosaver.utils.tools;
 
 import static com.piperStd.cryptosaver.utils.tools.showException;
@@ -22,11 +23,12 @@ import static com.piperStd.cryptosaver.utils.tools.showException;
 public class qr_show_activity extends AppCompatActivity {
 
     ImageView qrImage;
+    ViewFlipper flipper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navigate_qr_show_screen);
+        setContentView(R.layout.navigate_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
@@ -34,8 +36,7 @@ public class qr_show_activity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        qrImage = findViewById(R.id.imageView);
-
+        flipper = findViewById(R.id.viewFlipper);
 
     }
 
@@ -43,16 +44,16 @@ public class qr_show_activity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
+        flipper.setDisplayedChild(1);
+        qrImage = findViewById(R.id.imageView);
         try
         {
             Bundle extras = getIntent().getExtras();
             String text = (String)extras.get("text");
             String password = (String)extras.get("pass");
-            Log.d("text", text);
-            Log.d("pass", password);
             Crypto crypto = new Crypto(tools.toBytes(text), password);
             crypto.encrypt();
-            qrImage.setImageBitmap(QRTools.genBarcode(crypto.genEncryptedDataArr()));
+            qrImage.setImageBitmap(QR.genBarcode(crypto.genEncryptedDataArr()));
         }
         catch(Exception e)
         {
@@ -60,5 +61,6 @@ public class qr_show_activity extends AppCompatActivity {
         }
 
     }
+
 
 }

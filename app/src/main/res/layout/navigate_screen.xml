@@ -8,9 +8,16 @@
     android:fitsSystemWindows="true"
     >
 
-    <include
-        layout="@layout/crypt_screen"
-        />
+    <ViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id = "@+id/viewFlipper">
+
+        <include layout="@layout/crypt_screen" android:id = "@+id/includeCrypt"/>
+        <include layout="@layout/qr_code_show_screen" android:id = "@+id/includeQR"/>
+        <include layout="@layout/nfc_write_screen" android:id = "@+id/includeNFC"/>
+
+    </ViewFlipper>
 
 
 
