@@ -1,4 +1,4 @@
-package com.piperStd.cryptosaver;
+package com.piperStd.alldatasafe;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;

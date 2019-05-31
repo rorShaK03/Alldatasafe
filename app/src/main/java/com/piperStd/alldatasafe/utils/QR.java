@@ -1,4 +1,4 @@
-package com.piperStd.cryptosaver.utils;
+package com.piperStd.alldatasafe.utils;
 
 import android.graphics.Bitmap;
 import android.util.Base64;

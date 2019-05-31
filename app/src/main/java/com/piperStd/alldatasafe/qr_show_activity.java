@@ -1,24 +1,21 @@
-package com.piperStd.cryptosaver;
+package com.piperStd.alldatasafe;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.piperStd.cryptosaver.utils.Crypto;
-import com.piperStd.cryptosaver.utils.QR;
-import com.piperStd.cryptosaver.utils.tools;
+import com.piperStd.alldatasafe.utils.Crypto;
+import com.piperStd.alldatasafe.utils.QR;
+import com.piperStd.alldatasafe.utils.tools;
 
-import static com.piperStd.cryptosaver.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.tools.showException;
 
 public class qr_show_activity extends AppCompatActivity {
 
@@ -49,8 +46,8 @@ public class qr_show_activity extends AppCompatActivity {
         try
         {
             Bundle extras = getIntent().getExtras();
-            String text = (String)extras.get("com.piperstd.cryptosaver.EXTRA_TEXT");
-            String password = (String)extras.get("com.piperstd.cryptosaver.EXTRA_PASS");
+            String text = (String)extras.get("com.piperstd.alldatasafe.EXTRA_TEXT");
+            String password = (String)extras.get("com.piperstd.alldatasafe.EXTRA_PASS");
             Crypto crypto = new Crypto(tools.toBytes(text), password);
             crypto.encrypt();
             qrImage.setImageBitmap(QR.genBarcode(crypto.genEncryptedDataArr()));

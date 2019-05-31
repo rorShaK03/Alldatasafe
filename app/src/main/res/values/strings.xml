@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
-    <string name="app_name">Cryptosaver</string>
+    <string name="app_name">Alldatasafe</string>
     <string name="settings">Настройки</string>
     <string name="str_nfc">NFC</string>
     <string name="str_qr">QR-код</string>

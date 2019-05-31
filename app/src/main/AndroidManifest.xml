@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.piperStd.cryptosaver">
+    package="com.piperStd.alldatasafe">
 
     <uses-permission android:name="android.permission.NFC" />
 
@@ -17,12 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NFC_write_activity"></activity>
+        <activity android:name=".nfc_decode_activity"></activity>
+        <activity android:name=".nfc_write_activity" />
         <activity
             android:name=".qr_show_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".crypt_activity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -38,7 +39,7 @@
 
                 <data
                     android:host="ext"
-                    android:pathPrefix="/com.piperstd.cryptosaver:data"
+                    android:pathPrefix="/com.piperstd.alldatasafe:data"
                     android:scheme="vnd.android.nfc" />
             </intent-filter>
         </activity>

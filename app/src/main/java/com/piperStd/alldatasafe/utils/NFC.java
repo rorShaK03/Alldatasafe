@@ -1,8 +1,6 @@
-package com.piperStd.cryptosaver.utils;
+package com.piperStd.alldatasafe.utils;
 
-import android.content.Context;
 import android.content.IntentFilter;
-import android.icu.text.AlphabeticIndex;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -15,14 +13,11 @@ import android.nfc.tech.NfcB;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PatternMatcher;
-import android.util.Base64;
-import android.util.Log;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static com.piperStd.cryptosaver.utils.tools.contains;
-import static com.piperStd.cryptosaver.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.tools.contains;
+import static com.piperStd.alldatasafe.utils.tools.showException;
 
 public class NFC
 {
@@ -67,10 +62,10 @@ public class NFC
             switch(type)
             {
                 case TYPE_DATA:
-                    NdefFilter.addDataPath("/com.piperstd.cryptosaver:data", PatternMatcher.PATTERN_PREFIX);
+                    NdefFilter.addDataPath("/com.piperstd.alldatasafe:data", PatternMatcher.PATTERN_PREFIX);
                     break;
                 case TYPE_KEY:
-                    NdefFilter.addDataPath("/com.piperstd.cryptosaver:key", PatternMatcher.PATTERN_PREFIX);
+                    NdefFilter.addDataPath("/com.piperstd.alldatasafe:key", PatternMatcher.PATTERN_PREFIX);
                     break;
             }
         }
@@ -114,7 +109,7 @@ public class NFC
             }
             catch (Exception e)
             {
-                //Объект ошибки e почему-то возвращает null из getMessage();
+                //Объект ошибки e почему-то возвращает null из getMessage()
                 showException("NdefFormatable", "Couldn`t format to ndef");
             }
         }
@@ -128,11 +123,11 @@ public class NFC
             // заменить UTF_8 на US_ASCII, если не работает
             case TYPE_DATA:
                 record = new NdefRecord(NdefRecord.TNF_EXTERNAL_TYPE,
-                        "com.piperstd.cryptosaver:data".getBytes(StandardCharsets.US_ASCII), new byte[0], data);
+                        "com.piperstd.alldatasafe:data".getBytes(StandardCharsets.US_ASCII), new byte[0], data);
                 break;
             case TYPE_KEY:
                 record = new NdefRecord(NdefRecord.TNF_EXTERNAL_TYPE,
-                        "com.piperstd.cryptosaver:key".getBytes(StandardCharsets.US_ASCII), new byte[0], data);
+                        "com.piperstd.alldatasafe:key".getBytes(StandardCharsets.US_ASCII), new byte[0], data);
                 break;
         }
         NdefRecord[] records = {record};

@@ -1,4 +1,4 @@
-package com.piperStd.cryptosaver.utils;
+package com.piperStd.alldatasafe.utils;
 
 class Credentials
 {
