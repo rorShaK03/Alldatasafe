@@ -1,4 +1,4 @@
-# Cryptosaver
+# Alldatasafe
 An android application for encrypted data saving on external memory devices
 
 ## We are planning to add support of encrypting and saving data on:
