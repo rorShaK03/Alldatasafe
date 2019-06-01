@@ -111,7 +111,7 @@ public class nfc_decode_activity extends AppCompatActivity {
         Crypto crypto = Crypto.parseBase64Encrypted(new String(nfc.readTag()));
         crypto.password = passField.getText().toString();
         crypto.decrypt();
-        decryptedField.setText("Расшифрованные данные: " + crypto.genStringFromDecrypted());
+        decryptedField.setText(crypto.genStringFromDecrypted());
     }
 
 }
