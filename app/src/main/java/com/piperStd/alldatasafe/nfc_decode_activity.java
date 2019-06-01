@@ -3,6 +3,7 @@ package com.piperStd.alldatasafe;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.PendingIntent;
@@ -27,17 +28,20 @@ import java.nio.charset.StandardCharsets;
 import static com.piperStd.alldatasafe.utils.tools.showException;
 import static com.piperStd.alldatasafe.utils.tools.toBytes;
 
-public class nfc_decode_activity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class nfc_decode_activity extends AppCompatActivity {
 
     NfcAdapter adapter;
 
     DrawerLayout drawerLayout = null;
+    NavigationView navigation;
     EditText passField = null;
     TextView decryptedField = null;
     ViewFlipper flipper = null;
     PendingIntent pending;
     IntentFilter[] filters;
     String[][] techList = null;
+    ActivityLauncher launcher = null;
+    MainNavigationListener navListener = null;
 
     String pass = null;
     String text = null;
@@ -45,18 +49,20 @@ public class nfc_decode_activity extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        launcher = new ActivityLauncher(this);
         setContentView(R.layout.navigate_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
         passField = findViewById(R.id.passDecodeField);
         decryptedField = findViewById(R.id.decryptedField);
         drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigation = findViewById(R.id.nav_view);
+        navListener = new MainNavigationListener(this, drawerLayout);
+        navigation = findViewById(R.id.nav_view);
         flipper = findViewById(R.id.viewFlipper);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        navigation.setNavigationItemSelectedListener(this);
+        navigation.setNavigationItemSelectedListener(navListener);
         adapter = NfcAdapter.getDefaultAdapter(this);
         pending = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -65,32 +71,38 @@ public class nfc_decode_activity extends AppCompatActivity implements Navigation
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
         flipper.setDisplayedChild(3);
+        navigation.getMenu().getItem(1).setChecked(true);
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         adapter.enableForegroundDispatch(this, pending, filters, techList);
 
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
         adapter.disableForegroundDispatch(this);
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
         drawerLayout.closeDrawers();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -102,74 +114,5 @@ public class nfc_decode_activity extends AppCompatActivity implements Navigation
         decryptedField.setText("Расшифрованные данные: " + crypto.genStringFromDecrypted());
     }
 
-    private void launchQRCodeActivity(String text, String password)
-    {
-        try {
-            Intent intent = new Intent(this, qr_show_activity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_TEXT", text);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_PASS", password);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            showException(this, e.getMessage());
-        }
-    }
-
-    private void launchNFCActivity(String text, String password)
-    {
-        try {
-            Intent intent = new Intent(this, nfc_write_activity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_TEXT", text);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_PASS", password);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            showException(this, e.getMessage());
-        }
-    }
-
-    private void launchNfcDecodeActivity()
-    {
-        try {
-            Intent intent = new Intent(this, nfc_decode_activity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            showException(this, e.getMessage());
-        }
-    }
-
-    private void launchCryptActivity()
-    {
-        try {
-            Intent intent = new Intent(this, crypt_activity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
-        catch(Exception e)
-        {
-            showException(this, e.getMessage());
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item)
-    {
-        int id = item.getItemId();
-        switch(id)
-        {
-            case R.id.nav_encrypt:
-                this.launchCryptActivity();
-                break;
-            case R.id.nav_decrypt:
-                this.launchNfcDecodeActivity();
-        }
-        return true;
-    }
 }
+
