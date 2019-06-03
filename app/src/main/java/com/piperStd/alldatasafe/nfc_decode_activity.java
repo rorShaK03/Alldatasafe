@@ -109,9 +109,12 @@ public class nfc_decode_activity extends AppCompatActivity {
     public void onNewIntent(Intent intent) {
         NFC nfc = new NFC(intent.getExtras());
         Crypto crypto = Crypto.parseBase64Encrypted(new String(nfc.readTag()));
-        crypto.password = passField.getText().toString();
-        crypto.decrypt();
-        decryptedField.setText(crypto.genStringFromDecrypted());
+        if(crypto != null)
+        {
+            crypto.password = passField.getText().toString();
+            crypto.decrypt();
+            decryptedField.setText(crypto.valid ? crypto.genStringFromDecrypted() : "Неверный пароль");
+        }
     }
 
 }

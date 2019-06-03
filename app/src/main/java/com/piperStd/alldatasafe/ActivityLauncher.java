@@ -68,4 +68,17 @@ public class ActivityLauncher
             showException(this, e.getMessage());
         }
     }
+
+    public void launchQrDetectActivity()
+    {
+        try {
+            Intent intent = new Intent(context, qr_detect_activity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
+    }
 }

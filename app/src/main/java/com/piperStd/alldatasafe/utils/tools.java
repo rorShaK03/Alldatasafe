@@ -21,7 +21,7 @@ public class tools
         Log.e(tag, info);
     }
 
-    static <T> boolean contains(T[] arr, T item)
+    public static <T> boolean contains(T[] arr, T item)
     {
         for(int i = 0; i < arr.length; i++)
         {
@@ -31,5 +31,25 @@ public class tools
             }
         }
         return false;
+    }
+
+    public static byte[] expandArray(byte[] arr, int extra)
+    {
+        byte[] res = new byte[arr.length + extra];
+        for(int i = 0; i < arr.length; i++)
+        {
+            res[i] = arr[i];
+        }
+        return res;
+    }
+
+    public static byte[] offsetToEndArray(byte[] arr, int n, int offset)
+    {
+        byte[] res = new byte[arr.length];
+        for(int i = 0; i < n; i++)
+        {
+            res[i + offset] = arr[i];
+        }
+        return res;
     }
 }

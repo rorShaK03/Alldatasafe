@@ -1,10 +1,14 @@
 package com.piperStd.alldatasafe;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -16,6 +20,7 @@ import android.widget.ViewFlipper;
 import static com.piperStd.alldatasafe.utils.tools.*;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.utils.camera.CameraHelper;
 
 
 public class crypt_activity extends AppCompatActivity implements View.OnClickListener{
@@ -42,13 +47,14 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigation.setNavigationItemSelectedListener(navListener);
-
+        launcher.launchQrDetectActivity();
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
+
         flipper.setDisplayedChild(0);
         navigation.getMenu().getItem(0).setChecked(true);
         nextBtn = findViewById(R.id.button);
@@ -70,6 +76,8 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
             super.onBackPressed();
         }
     }
+
+
 
 
 

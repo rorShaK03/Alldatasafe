@@ -20,6 +20,9 @@ public class Crypto {
 
     public String password;
     public byte[] data;
+    public byte[] encrypted;
+    public byte[] decrypted;
+    public boolean valid;
     private Credentials credentials;
 
     public Crypto()
@@ -72,7 +75,7 @@ public class Crypto {
             cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
             SecretKey key = new SecretKeySpec(credentials.key, 0, credentials.key.length, "AES256");
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            data = cipher.doFinal(data);
+            encrypted = cipher.doFinal(data);
             credentials.iv = cipher.getIV();
         }
         catch(Exception e)
@@ -81,19 +84,21 @@ public class Crypto {
         }
     }
 
-    private void AES256CBC_decrypt()
+    private boolean AES256CBC_decrypt()
     {
         Cipher cipher = null;
         try {
             cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
             SecretKey key = new SecretKeySpec(credentials.key, 0, credentials.key.length, "AES256");
             cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(credentials.iv));
-            data = cipher.doFinal(data);
+            decrypted = cipher.doFinal(data);
         }
         catch(Exception e)
         {
             showException(this, "Couldn`t decrypt message with AES-256: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
     public void KDF(String pass)
@@ -106,14 +111,23 @@ public class Crypto {
     {
         KDF(password);
         AES256CBC_encrypt();
+        data = encrypted;
         return data;
     }
 
     public byte[] decrypt()
     {
         KDF(password);
-        AES256CBC_decrypt();
-        Log.d("decrypted", new String(data));
+        if(AES256CBC_decrypt())
+        {
+            valid = true;
+            data = decrypted;
+        }
+        else
+        {
+            valid = false;
+            data = null;
+        }
         return data;
     }
 
@@ -135,15 +149,16 @@ public class Crypto {
     {
         byte[] iv = new byte[16];
         byte[] encrypted = new byte[encData.length - 16];
-        for(int i = 0; i < 16; i++)
+        for (int i = 0; i < 16; i++)
         {
             iv[i] = encData[i];
         }
-        for(int i = 0; i < encData.length - 16; i++)
+        for (int i = 0; i < encData.length - 16; i++)
         {
             encrypted[i] = encData[i + 16];
         }
         return new Crypto(encrypted, iv);
+
     }
 
     public static Crypto parseBase64Encrypted(String base64)
@@ -159,7 +174,14 @@ public class Crypto {
 
     public String genStringFromDecrypted()
     {
-        return new String(data);
+        if(data != null)
+        {
+            return new String(data);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public Credentials getCredentials()
