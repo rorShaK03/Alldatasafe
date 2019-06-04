@@ -13,13 +13,13 @@ import android.os.Bundle;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
-import com.piperStd.alldatasafe.utils.Crypto;
-import com.piperStd.alldatasafe.utils.NFC;
+import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
+import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
 
 import java.nio.charset.StandardCharsets;
 
-import static com.piperStd.alldatasafe.utils.tools.showException;
-import static com.piperStd.alldatasafe.utils.tools.toBytes;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
+import static com.piperStd.alldatasafe.utils.Others.tools.toBytes;
 
 public class nfc_write_activity extends AppCompatActivity {
 
@@ -47,8 +47,8 @@ public class nfc_write_activity extends AppCompatActivity {
         adapter = NfcAdapter.getDefaultAdapter(this);
         pending = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        filters = new IntentFilter[]{NFC.createNdefFilter(NFC.TYPE_DATA), NFC.createTechFilter()};
-        techList = new String[][]{NFC.knownTech};
+        filters = new IntentFilter[]{NfcHelper.createNdefFilter(NfcHelper.TYPE_DATA), NfcHelper.createTechFilter()};
+        techList = new String[][]{NfcHelper.knownTech};
     }
 
     @Override
@@ -78,12 +78,12 @@ public class nfc_write_activity extends AppCompatActivity {
 
     @Override
     public void onNewIntent(Intent intent) {
-        NFC nfc = new NFC(intent.getExtras());
+        NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
         if(pass != null && text != null)
         {
             Crypto crypto = new Crypto(toBytes(text), pass);
             crypto.encrypt();
-            nfc.writeTag(NFC.TYPE_DATA, crypto.genBase64FromEncryptedData().getBytes(StandardCharsets.UTF_8));
+            nfcHelper.writeTag(NfcHelper.TYPE_DATA, crypto.genBase64FromEncryptedData().getBytes(StandardCharsets.UTF_8));
         }
     }
 

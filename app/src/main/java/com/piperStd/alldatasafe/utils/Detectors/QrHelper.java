@@ -1,4 +1,4 @@
-package com.piperStd.alldatasafe.utils;
+package com.piperStd.alldatasafe.utils.Detectors;
 
 import android.content.Context;
 import android.graphics.Bitmap;

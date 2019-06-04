@@ -20,6 +20,7 @@ public class TextureListener implements TextureView.SurfaceTextureListener
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int width, int height)
     {
+        texture.setDefaultBufferSize(width, height);
 
     }
 

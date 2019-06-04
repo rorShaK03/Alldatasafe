@@ -1,13 +1,14 @@
-package com.piperStd.alldatasafe;
+package com.piperStd.alldatasafe.utils.UITools;
 
 import android.content.Context;
 import android.view.Gravity;
 import android.view.MenuItem;
 
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.R;
+import com.piperStd.alldatasafe.utils.UITools.ActivityLauncher;
 
 public class MainNavigationListener implements NavigationView.OnNavigationItemSelectedListener
 {

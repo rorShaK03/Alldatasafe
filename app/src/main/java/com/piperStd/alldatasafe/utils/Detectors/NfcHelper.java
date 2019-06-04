@@ -1,4 +1,4 @@
-package com.piperStd.alldatasafe.utils;
+package com.piperStd.alldatasafe.utils.Detectors;
 
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -16,10 +16,10 @@ import android.os.PatternMatcher;
 
 import java.nio.charset.StandardCharsets;
 
-import static com.piperStd.alldatasafe.utils.tools.contains;
-import static com.piperStd.alldatasafe.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.Others.tools.contains;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
-public class NFC
+public class NfcHelper
 {
     public static final byte TYPE_DATA = 0;
     public static final byte TYPE_KEY = 1;
@@ -32,7 +32,7 @@ public class NFC
     public static String[] knownTech = { NfcA.class.getName(), NfcB.class.getName(),  NdefFormatable.class.getName(), MifareClassic.class.getName()};
 
 
-    public NFC(Bundle bundle)
+    public NfcHelper(Bundle bundle)
     {
         tag = (Tag)bundle.get(NfcAdapter.EXTRA_TAG);
         if(contains(tag.getTechList(), Ndef.class.getName()))
@@ -71,7 +71,7 @@ public class NFC
         }
         catch(Exception e)
         {
-            showException(NFC.class.getName(), e.getMessage());
+            showException(NfcHelper.class.getName(), e.getMessage());
         }
         return NdefFilter;
     }

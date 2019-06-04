@@ -11,22 +11,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
-import com.piperStd.alldatasafe.utils.Crypto;
-import com.piperStd.alldatasafe.utils.NFC;
+import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
+import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
+import com.piperStd.alldatasafe.utils.UITools.ActivityLauncher;
+import com.piperStd.alldatasafe.utils.UITools.MainNavigationListener;
 
-import java.nio.charset.StandardCharsets;
-
-import static com.piperStd.alldatasafe.utils.tools.showException;
-import static com.piperStd.alldatasafe.utils.tools.toBytes;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class nfc_decode_activity extends AppCompatActivity {
 
@@ -52,7 +47,7 @@ public class nfc_decode_activity extends AppCompatActivity {
         launcher = new ActivityLauncher(this);
         setContentView(R.layout.navigate_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        passField = findViewById(R.id.passDecodeField);
+        passField = findViewById(R.id.passNfcDecode);
         decryptedField = findViewById(R.id.decryptedField);
         drawerLayout = findViewById(R.id.drawer_layout);
         navListener = new MainNavigationListener(this, drawerLayout);
@@ -66,8 +61,8 @@ public class nfc_decode_activity extends AppCompatActivity {
         adapter = NfcAdapter.getDefaultAdapter(this);
         pending = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        filters = new IntentFilter[]{NFC.createNdefFilter(NFC.TYPE_DATA), NFC.createTechFilter()};
-        techList = new String[][]{NFC.knownTech};
+        filters = new IntentFilter[]{NfcHelper.createNdefFilter(NfcHelper.TYPE_DATA), NfcHelper.createTechFilter()};
+        techList = new String[][]{NfcHelper.knownTech};
     }
 
     @Override
@@ -107,8 +102,8 @@ public class nfc_decode_activity extends AppCompatActivity {
 
     @Override
     public void onNewIntent(Intent intent) {
-        NFC nfc = new NFC(intent.getExtras());
-        Crypto crypto = Crypto.parseBase64Encrypted(new String(nfc.readTag()));
+        NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
+        Crypto crypto = Crypto.parseBase64Encrypted(new String(nfcHelper.readTag()));
         if(crypto != null)
         {
             crypto.password = passField.getText().toString();

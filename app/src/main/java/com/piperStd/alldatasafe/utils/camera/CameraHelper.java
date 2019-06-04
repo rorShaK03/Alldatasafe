@@ -1,37 +1,25 @@
 package com.piperStd.alldatasafe.utils.camera;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.params.SessionConfiguration;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
-import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import com.piperStd.alldatasafe.qr_detect_activity;
 import com.piperStd.alldatasafe.utils.AsyncTools.AsyncHandlerThread;
 
-import org.w3c.dom.Text;
-
 import java.util.Arrays;
 
-import static com.piperStd.alldatasafe.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class CameraHelper
 {
@@ -60,7 +48,7 @@ public class CameraHelper
         maxJpegSize = getMaxJpegSize();
         setTextureView(view);
         textureView.setSurfaceTextureListener(new TextureListener(this));
-        reader = ImageReader.newInstance(1920, 1080, ImageFormat.YUV_420_888, 3);
+        reader = ImageReader.newInstance(1920, 1080, ImageFormat.YUV_420_888, 2);
         reader.setOnImageAvailableListener(new ImageAvailableListener(this), handlerThread.handler);
     }
 
@@ -71,6 +59,7 @@ public class CameraHelper
     {
         Surface surface = reader.getSurface();
         SurfaceTexture texture = textureView.getSurfaceTexture();
+        texture.setDefaultBufferSize(1280, 720);
         Surface previewSurface = new Surface(texture);
         try
         {

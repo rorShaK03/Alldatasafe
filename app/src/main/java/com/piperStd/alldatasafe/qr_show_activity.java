@@ -11,11 +11,11 @@ import android.widget.ViewFlipper;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.piperStd.alldatasafe.utils.Crypto;
-import com.piperStd.alldatasafe.utils.QrHelper;
-import com.piperStd.alldatasafe.utils.tools;
+import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
+import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
+import com.piperStd.alldatasafe.utils.Others.tools;
 
-import static com.piperStd.alldatasafe.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class qr_show_activity extends AppCompatActivity {
 

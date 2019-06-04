@@ -1,9 +1,15 @@
-package com.piperStd.alldatasafe;
+package com.piperStd.alldatasafe.utils.UITools;
 
 import android.content.Context;
 import android.content.Intent;
 
-import static com.piperStd.alldatasafe.utils.tools.showException;
+import com.piperStd.alldatasafe.crypt_activity;
+import com.piperStd.alldatasafe.nfc_decode_activity;
+import com.piperStd.alldatasafe.nfc_write_activity;
+import com.piperStd.alldatasafe.qr_detect_activity;
+import com.piperStd.alldatasafe.qr_show_activity;
+
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class ActivityLauncher
 {

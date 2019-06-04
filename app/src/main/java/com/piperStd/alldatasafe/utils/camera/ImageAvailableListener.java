@@ -7,15 +7,11 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.media.Image;
 import android.media.ImageReader;
-import android.os.Message;
-import android.util.Log;
-
-import com.piperStd.alldatasafe.utils.AsyncTools.AsyncHandlerThread;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
-import static com.piperStd.alldatasafe.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class ImageAvailableListener implements ImageReader.OnImageAvailableListener
 {
@@ -33,9 +29,9 @@ public class ImageAvailableListener implements ImageReader.OnImageAvailableListe
         ByteBuffer bufferY = image.getPlanes()[0].getBuffer();
         ByteBuffer bufferU = image.getPlanes()[1].getBuffer();
         ByteBuffer bufferV = image.getPlanes()[2].getBuffer();
-        byte[] dataY = new byte[bufferY.remaining()];
-        byte[] dataU = new byte[bufferU.remaining()];
-        byte[] dataV = new byte[bufferV.remaining()];
+        byte[] dataY = new byte[bufferY.capacity()];
+        byte[] dataU = new byte[bufferU.capacity()];
+        byte[] dataV = new byte[bufferV.capacity()];
         bufferY.get(dataY);
         bufferU.get(dataU);
         bufferV.get(dataV);

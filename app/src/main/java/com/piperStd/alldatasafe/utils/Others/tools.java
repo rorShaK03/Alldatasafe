@@ -1,4 +1,4 @@
-package com.piperStd.alldatasafe.utils;
+package com.piperStd.alldatasafe.utils.Others;
 
 import android.util.Log;
 
@@ -21,11 +21,11 @@ public class tools
         Log.e(tag, info);
     }
 
-    public static <T> boolean contains(T[] arr, T item)
+    public static <T> boolean contains(T[] arr, T obj)
     {
-        for(int i = 0; i < arr.length; i++)
+        for(T item : arr)
         {
-            if(arr[i].equals(item))
+            if(item.equals(obj))
             {
                 return true;
             }

@@ -17,14 +17,12 @@ public class DeviceStateCallback extends CameraDevice.StateCallback
     {
         helper.device = camera;
         helper.createCaptureSession();
-        Log.d("Camera", "Camera with id: " + camera.getId() + " was opened");
     }
 
     @Override
     public void onDisconnected(@NonNull CameraDevice camera)
     {
         helper.device.close();
-        Log.d("Camera", "Camera with id: " + camera.getId() + " was disconnected");
         helper.device = null;
     }
 

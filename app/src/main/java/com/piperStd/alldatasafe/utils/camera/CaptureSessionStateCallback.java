@@ -1,9 +1,8 @@
 package com.piperStd.alldatasafe.utils.camera;
 
-import android.content.Context;
 import android.hardware.camera2.CameraCaptureSession;
 
-import static com.piperStd.alldatasafe.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class CaptureSessionStateCallback extends CameraCaptureSession.StateCallback
 {

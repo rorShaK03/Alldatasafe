@@ -1,8 +1,9 @@
-package com.piperStd.alldatasafe.utils;
+package com.piperStd.alldatasafe.utils.Cryptographics;
 
 
 import android.util.Base64;
-import android.util.Log;
+
+import com.piperStd.alldatasafe.utils.Others.tools;
 
 import java.security.MessageDigest;
 import javax.crypto.Cipher;
@@ -10,7 +11,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.piperStd.alldatasafe.utils.tools.showException;
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 
 
