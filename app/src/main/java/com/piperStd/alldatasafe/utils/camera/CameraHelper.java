@@ -1,6 +1,7 @@
 package com.piperStd.alldatasafe.utils.camera;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
@@ -13,6 +14,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.SessionConfiguration;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.ImageReader;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -22,6 +24,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.piperStd.alldatasafe.qr_detect_activity;
+import com.piperStd.alldatasafe.utils.AsyncTools.AsyncHandlerThread;
+
 import org.w3c.dom.Text;
 
 import java.util.Arrays;
@@ -30,65 +35,49 @@ import static com.piperStd.alldatasafe.utils.tools.showException;
 
 public class CameraHelper
 {
+    public ImageReader reader;
+    AsyncHandlerThread handlerThread;
+    public boolean couldBeOpened = false;
     public CameraCaptureSession session;
     public CaptureRequest.Builder builder;
+    public String text = null;
     private CameraManager manager = null;
-    private CameraDevice device = null;
+    public CameraDevice device = null;
     private String cameraID;
     private Size maxJpegSize;
     private TextureView textureView = null;
-    private Context context;
+    public qr_detect_activity context;
 
 
-    public CameraHelper(Context context, TextureView view)
+    public CameraHelper(qr_detect_activity context, TextureView view)
     {
+        this.context = context;
+        handlerThread = new AsyncHandlerThread("imageProcessor");
+        handlerThread.start();
+        handlerThread.prepareHandler();
         manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         cameraID = setUpCameraId();
         maxJpegSize = getMaxJpegSize();
         setTextureView(view);
         textureView.setSurfaceTextureListener(new TextureListener(this));
-
+        reader = ImageReader.newInstance(1920, 1080, ImageFormat.YUV_420_888, 3);
+        reader.setOnImageAvailableListener(new ImageAvailableListener(this), handlerThread.handler);
     }
 
 
 
 
-    private CameraDevice.StateCallback deviceStateCallback = new CameraDevice.StateCallback() {
-        @Override
-        public void onOpened(@NonNull CameraDevice camera)
-        {
-            device = camera;
-            createPreviewSession();
-            Log.d("Camera", "Camera with id: " + camera.getId() + " was opened");
-        }
-
-        @Override
-        public void onDisconnected(@NonNull CameraDevice camera)
-        {
-            device.close();
-            Log.d("Camera", "Camera with id: " + camera.getId() + " was disconnected");
-            device = null;
-        }
-
-        @Override
-        public void onError(@NonNull CameraDevice camera, int error)
-        {
-            Log.e("Camera error", "Error " + error + " in camera with id " + camera.getId());
-
-        }
-    };
-
-    private void createPreviewSession()
+    public void createCaptureSession()
     {
-        Log.e("Camera", textureView == null ? "textureView == null" : "OK");
+        Surface surface = reader.getSurface();
         SurfaceTexture texture = textureView.getSurfaceTexture();
-        texture.setDefaultBufferSize(1920, 1080);
-        Surface surface = new Surface(texture);
+        Surface previewSurface = new Surface(texture);
         try
         {
             builder = device.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             builder.addTarget(surface);
-            device.createCaptureSession(Arrays.asList(surface), new CaptureSessionStateCallback(this), null);
+            builder.addTarget(previewSurface);
+            device.createCaptureSession(Arrays.asList(surface, previewSurface), new CaptureSessionStateCallback(this), null);
         }
         catch(Exception e)
         {
@@ -122,7 +111,7 @@ public class CameraHelper
         }
         catch(Exception e)
         {
-            showException(this, "Unable to set cameraHelper ID");
+            showException(this, "Unable to set camera ID");
         }
         return null;
     }
@@ -150,7 +139,7 @@ public class CameraHelper
     {
         try
         {
-            manager.openCamera(cameraID, deviceStateCallback, null);
+            manager.openCamera(cameraID, new DeviceStateCallback(this), null);
         }
         catch(SecurityException e)
         {

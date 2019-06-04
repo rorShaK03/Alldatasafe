@@ -9,18 +9,30 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.TextureView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.R;
+import com.piperStd.alldatasafe.utils.QrHelper;
 import com.piperStd.alldatasafe.utils.camera.CameraHelper;
 
 public class qr_detect_activity extends AppCompatActivity {
 
     final int CAMERA_PERMISSION_ID = 0;
+    TextView textView;
+    Context me;
+    public Handler handler;
+    QrHelper qrHelper;
     CameraHelper camera;
     ViewFlipper flipper = null;
     NavigationView navigation = null;
@@ -35,6 +47,7 @@ public class qr_detect_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         launcher = new ActivityLauncher(this);
         setContentView(R.layout.navigate_screen);
+        me = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         flipper = findViewById(R.id.viewFlipper);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -45,14 +58,6 @@ public class qr_detect_activity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigation.setNavigationItemSelectedListener(navListener);
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-        flipper.setDisplayedChild(4);
-        navigation.getMenu().getItem(1).setChecked(true);
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_ID);
@@ -60,6 +65,33 @@ public class qr_detect_activity extends AppCompatActivity {
         else
         {
             camera = new CameraHelper(this, (TextureView) findViewById(R.id.camera_preview));
+        }
+    }
+
+    @SuppressLint("HandlerLeak")
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        flipper.setDisplayedChild(4);
+        textView = findViewById(R.id.qr_detect_textView);
+        qrHelper = new QrHelper();
+        handler = new Handler()
+        {
+            @Override
+            public void handleMessage(Message msg)
+            {
+                String text = qrHelper.readBarcode(me, (Bitmap)msg.obj);
+                if (text != null)
+                    textView.setText(text);
+            }
+
+        };
+
+        navigation.getMenu().getItem(1).setChecked(true);
+        if(!camera.isOpen() && camera.couldBeOpened)
+        {
+            camera.openCamera();
         }
     }
 

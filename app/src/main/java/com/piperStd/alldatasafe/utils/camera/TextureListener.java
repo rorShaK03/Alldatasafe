@@ -13,6 +13,7 @@ public class TextureListener implements TextureView.SurfaceTextureListener
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height)
     {
+        cameraHelper.couldBeOpened = true;
         cameraHelper.openCamera();
     }
 
@@ -25,6 +26,7 @@ public class TextureListener implements TextureView.SurfaceTextureListener
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture texture)
     {
+        cameraHelper.couldBeOpened = false;
         return false;
     }
 

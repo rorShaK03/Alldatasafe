@@ -7,20 +7,20 @@ import static com.piperStd.alldatasafe.utils.tools.showException;
 
 public class CaptureSessionStateCallback extends CameraCaptureSession.StateCallback
 {
-    CameraHelper cameraHelper;
+    CameraHelper helper;
 
-    public CaptureSessionStateCallback(CameraHelper cameraHelper)
+    public CaptureSessionStateCallback(CameraHelper helper)
     {
-            this.cameraHelper = cameraHelper;
+            this.helper = helper;
     }
 
     @Override
     public void onConfigured(CameraCaptureSession session)
     {
-        cameraHelper.session = session;
+        helper.session = session;
         try
         {
-            session.setRepeatingRequest(cameraHelper.builder.build(), null, null);
+            session.setRepeatingRequest(helper.builder.build(), null, null);
         }
         catch(Exception e)
         {

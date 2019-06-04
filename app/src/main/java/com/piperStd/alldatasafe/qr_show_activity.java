@@ -12,7 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.utils.Crypto;
-import com.piperStd.alldatasafe.utils.QR;
+import com.piperStd.alldatasafe.utils.QrHelper;
 import com.piperStd.alldatasafe.utils.tools;
 
 import static com.piperStd.alldatasafe.utils.tools.showException;
@@ -50,7 +50,7 @@ public class qr_show_activity extends AppCompatActivity {
             String password = (String)extras.get("com.piperstd.alldatasafe.EXTRA_PASS");
             Crypto crypto = new Crypto(tools.toBytes(text), password);
             crypto.encrypt();
-            qrImage.setImageBitmap(QR.genBarcode(crypto.genEncryptedDataArr()));
+            qrImage.setImageBitmap(QrHelper.genBarcode(crypto.genEncryptedDataArr()));
         }
         catch(Exception e)
         {
