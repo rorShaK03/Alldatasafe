@@ -1,4 +1,4 @@
-package com.piperStd.alldatasafe.utils.UITools;
+package com.piperStd.alldatasafe.UI;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -8,7 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.R;
-import com.piperStd.alldatasafe.utils.UITools.ActivityLauncher;
+import com.piperStd.alldatasafe.UI.ActivityLauncher;
 
 public class MainNavigationListener implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -32,7 +32,7 @@ public class MainNavigationListener implements NavigationView.OnNavigationItemSe
                 launcher.launchCryptActivity();
                 break;
             case R.id.nav_decrypt:
-                launcher.launchNfcDecodeActivity();
+                launcher.launchDecryptActivity();
         }
         drawer.closeDrawer(Gravity.LEFT);
         return true;

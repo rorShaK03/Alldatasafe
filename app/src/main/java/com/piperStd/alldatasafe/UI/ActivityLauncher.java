@@ -1,4 +1,4 @@
-package com.piperStd.alldatasafe.utils.UITools;
+package com.piperStd.alldatasafe.UI;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import com.piperStd.alldatasafe.nfc_decode_activity;
 import com.piperStd.alldatasafe.nfc_write_activity;
 import com.piperStd.alldatasafe.qr_detect_activity;
 import com.piperStd.alldatasafe.qr_show_activity;
+import com.piperStd.alldatasafe.decrypt_activity;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
@@ -79,7 +80,19 @@ public class ActivityLauncher
     {
         try {
             Intent intent = new Intent(context, qr_detect_activity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            context.startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
+    }
+
+    public void launchDecryptActivity()
+    {
+        try {
+            Intent intent = new Intent(context, decrypt_activity.class);
             context.startActivity(intent);
         }
         catch(Exception e)

@@ -1,27 +1,25 @@
 package com.piperStd.alldatasafe;
 
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.os.Bundle;
 import android.widget.ViewFlipper;
-
-import static com.piperStd.alldatasafe.utils.Others.tools.*;
 
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
+import com.piperStd.alldatasafe.UI.DecryptOnClickListener;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 
+public class decrypt_activity extends AppCompatActivity {
 
-public class crypt_activity extends AppCompatActivity implements View.OnClickListener{
-
+    CardView qr_card;
+    CardView nfc_card;
     ViewFlipper flipper = null;
     NavigationView navigation = null;
     AppCompatButton nextBtn;
@@ -32,6 +30,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.navigate_screen);
         launcher = new ActivityLauncher(this);
         setContentView(R.layout.navigate_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -44,17 +43,18 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigation.setNavigationItemSelectedListener(navListener);
-        //launcher.launchQrDetectActivity();
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
-        flipper.setDisplayedChild(0);
-        navigation.getMenu().getItem(0).setChecked(true);
-        nextBtn = findViewById(R.id.button);
-        nextBtn.setOnClickListener(this);
+        flipper.setDisplayedChild(5);
+        qr_card = findViewById(R.id.qr_card);
+        nfc_card = findViewById(R.id.nfc_card);
+        qr_card.setOnClickListener(new DecryptOnClickListener());
+        nfc_card.setOnClickListener(new DecryptOnClickListener());
+        navigation.getMenu().getItem(1).setChecked(true);
     }
 
     @Override
@@ -72,49 +72,4 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
             super.onBackPressed();
         }
     }
-
-
-
-
-
-    @Override
-    public void onClick(View view)
-    {
-
-        RadioGroup place = findViewById(R.id.placeGroup);
-        int placeId = place.getCheckedRadioButtonId();
-        EditText editText = findViewById(R.id.editText);
-        String text = editText.getText().toString();
-        EditText editPass = findViewById(R.id.editPass);
-        String pass = editPass.getText().toString();
-        if(text.length() != 0 && pass.length() != 0) {
-            switch (placeId) {
-                case R.id.radioNFC:
-                    launcher.launchNFCActivity(text, pass);
-                    break;
-                case R.id.radioQR:
-                    launcher.launchQRCodeActivity(text, pass);
-                    break;
-                case R.id.radioServer:
-                    break;
-                default:
-                    showException(this, "Choose place for saving");
-            }
-        }
-        else if(text.length() == 0)
-        {
-            showException(this, "Text is empty");
-        }
-        else if(pass.length() == 0)
-        {
-            showException(this, "Pass is empty");
-        }
-
-    }
-
-
-
-
-
 }
-

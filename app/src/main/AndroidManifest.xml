@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".qr_detect_activity"></activity>
+        <activity android:name=".decrypt_activity"></activity>
+        <activity android:name=".qr_detect_activity" />
         <activity android:name=".nfc_decode_activity" />
         <activity android:name=".nfc_write_activity" />
         <activity

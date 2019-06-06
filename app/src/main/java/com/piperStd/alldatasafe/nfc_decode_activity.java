@@ -18,8 +18,8 @@ import android.widget.ViewFlipper;
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
-import com.piperStd.alldatasafe.utils.UITools.ActivityLauncher;
-import com.piperStd.alldatasafe.utils.UITools.MainNavigationListener;
+import com.piperStd.alldatasafe.UI.ActivityLauncher;
+import com.piperStd.alldatasafe.UI.MainNavigationListener;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 

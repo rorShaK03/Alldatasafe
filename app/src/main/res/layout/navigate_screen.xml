@@ -50,6 +50,7 @@
             <include layout="@layout/nfc_write_screen" android:id = "@+id/includeNFC"/>
             <include layout="@layout/nfc_decode_screen" android:id = "@+id/includeNFCdecode"/>
             <include layout="@layout/qr_detect_screen" android:id = "@+id/includeQRdetect"/>
+            <include layout="@layout/decrypt_screen" android:id = "@+id/includeDecrypt"/>
 
         </ViewFlipper>
 
