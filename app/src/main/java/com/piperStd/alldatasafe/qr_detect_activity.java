@@ -12,6 +12,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -83,14 +84,7 @@ public class qr_detect_activity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg)
             {
-                String text = qrHelper.readBarcode(qr_detect_activity.super.getApplicationContext(), (Bitmap)msg.obj);
-                if (text != null)
-                {
-                    Crypto crypto = Crypto.parseBase64Encrypted(text);
-                    crypto.password = edit.getText().toString();
-                    crypto.decrypt();
-                    textView.setText(crypto.genStringFromDecrypted());
-                }
+                new DecryptTask(edit.getText().toString()).execute((Bitmap)msg.obj);
             }
 
         };
@@ -121,6 +115,37 @@ public class qr_detect_activity extends AppCompatActivity {
             {
                 camera = new CameraHelper(this, (TextureView) findViewById(R.id.camera_preview));
             }
+        }
+    }
+
+    class DecryptTask extends AsyncTask<Bitmap, Void, String>
+    {
+        private String pass;
+
+        public DecryptTask(String pass)
+        {
+            this.pass = pass;
+        }
+
+        @Override
+        protected String doInBackground(Bitmap[] params)
+        {
+            String text = qrHelper.readBarcode(qr_detect_activity.super.getApplicationContext(), params[0]);
+            if (text != null)
+            {
+                Crypto crypto = Crypto.parseBase64Encrypted(text);
+                crypto.password = pass;
+                crypto.decrypt();
+                return crypto.genStringFromDecrypted();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String res)
+        {
+            if(res != null)
+                textView.setText(res);
         }
     }
 }
