@@ -22,14 +22,13 @@ import java.io.ByteArrayOutputStream;
 public class QrHelper
 {
     public BarcodeDetector detector;
-    public static Bitmap genBarcode(byte[] data)
+    public static Bitmap genBarcode(String base64)
     {
         Bitmap bitmap = null;
-        String base64encoded = Base64.encodeToString(data, Base64.DEFAULT);
         MultiFormatWriter writer = new MultiFormatWriter();
         try
         {
-            BitMatrix matrix = writer.encode(base64encoded, BarcodeFormat.QR_CODE, 200, 200);
+            BitMatrix matrix = writer.encode(base64, BarcodeFormat.QR_CODE, 200, 200);
             BarcodeEncoder encoder = new BarcodeEncoder();
             bitmap = encoder.createBitmap(matrix);
         }

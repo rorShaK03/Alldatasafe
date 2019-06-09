@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.Text;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
@@ -133,10 +134,8 @@ public class qr_detect_activity extends AppCompatActivity {
             String text = qrHelper.readBarcode(qr_detect_activity.super.getApplicationContext(), params[0]);
             if (text != null)
             {
-                Crypto crypto = Crypto.parseBase64Encrypted(text);
-                crypto.password = pass;
-                crypto.decrypt();
-                return crypto.genStringFromDecrypted();
+                Text textData = Text.DecryptAndParse(text, pass);
+                return textData.getString();
             }
             return null;
         }

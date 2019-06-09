@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.Text;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
@@ -103,13 +104,9 @@ public class nfc_decode_activity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent) {
         NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
-        Crypto crypto = Crypto.parseBase64Encrypted(new String(nfcHelper.readTag()));
-        if(crypto != null)
-        {
-            crypto.password = passField.getText().toString();
-            crypto.decrypt();
-            decryptedField.setText(crypto.valid ? crypto.genStringFromDecrypted() : "Неверный пароль");
-        }
+        Text text = Text.DecryptAndParse(new String(nfcHelper.readTag()), passField.getText().toString());
+        if(text != null)
+            decryptedField.setText(text.getString());
     }
 
 }

@@ -5,6 +5,7 @@ import android.util.Base64;
 
 import com.piperStd.alldatasafe.utils.Others.tools;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -177,7 +178,7 @@ public class Crypto {
     {
         if(data != null)
         {
-            return new String(data);
+            return new String(data, StandardCharsets.UTF_8);
         }
         else
         {

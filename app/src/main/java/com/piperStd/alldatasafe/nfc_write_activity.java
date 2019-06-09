@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.Text;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
 
@@ -81,9 +82,9 @@ public class nfc_write_activity extends AppCompatActivity {
         NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
         if(pass != null && text != null)
         {
-            Crypto crypto = new Crypto(toBytes(text), pass);
-            crypto.encrypt();
-            nfcHelper.writeTag(NfcHelper.TYPE_DATA, crypto.genBase64FromEncryptedData().getBytes(StandardCharsets.UTF_8));
+            Text text = new Text(this.text);
+            String base64 = text.getEncryptedString(this.pass);
+            nfcHelper.writeTag(NfcHelper.TYPE_DATA, base64.getBytes(StandardCharsets.UTF_8));
         }
     }
 

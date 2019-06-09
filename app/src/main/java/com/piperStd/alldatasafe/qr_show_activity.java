@@ -16,6 +16,7 @@ import android.widget.ViewFlipper;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.Text;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
 import com.piperStd.alldatasafe.utils.Files.FileHelper;
@@ -59,9 +60,8 @@ public class qr_show_activity extends AppCompatActivity implements View.OnClickL
             Bundle extras = getIntent().getExtras();
             String text = (String)extras.get("com.piperstd.alldatasafe.EXTRA_TEXT");
             String password = (String)extras.get("com.piperstd.alldatasafe.EXTRA_PASS");
-            Crypto crypto = new Crypto(tools.toBytes(text), password);
-            crypto.encrypt();
-            barcode = QrHelper.genBarcode(crypto.genEncryptedDataArr());
+            Text textData = new Text(text);
+            barcode = QrHelper.genBarcode(textData.getEncryptedString(password));
             qrImage.setImageBitmap(barcode);
         }
         catch(Exception e)
