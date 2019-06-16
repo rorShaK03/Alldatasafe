@@ -10,7 +10,6 @@ public class Text
 {
     public static String typeName = "alldatasafe/text";
     private static byte separator = 0x00;
-    private String password;
     private byte[] data;
 
     public Text(String text)

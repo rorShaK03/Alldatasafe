@@ -83,17 +83,19 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
 
         RadioGroup place = findViewById(R.id.placeGroup);
         int placeId = place.getCheckedRadioButtonId();
-        EditText editText = findViewById(R.id.editText);
-        String text = editText.getText().toString();
+        EditText login_field = findViewById(R.id.login_field);
+        EditText password_field = findViewById(R.id.password_field);
+        String login = login_field.getText().toString();
+        String password = password_field.getText().toString();
         EditText editPass = findViewById(R.id.editPass);
-        String pass = editPass.getText().toString();
-        if(text.length() != 0 && pass.length() != 0) {
+        String encryption_pass = editPass.getText().toString();
+        if(password.length() != 0 && login.length() != 0 && encryption_pass.length() != 0) {
             switch (placeId) {
                 case R.id.radioNFC:
-                    launcher.launchNFCActivity(text, pass);
+                    launcher.launchNFCActivity(login, password, encryption_pass);
                     break;
                 case R.id.radioQR:
-                    launcher.launchQRCodeActivity(text, pass);
+                    launcher.launchQRCodeActivity(login, password, encryption_pass);
                     break;
                 case R.id.radioServer:
                     break;
@@ -101,13 +103,17 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
                     showException(this, "Choose place for saving");
             }
         }
-        else if(text.length() == 0)
+        else if(login.length() == 0)
         {
-            showException(this, "Text is empty");
+            showException(this, "Login is empty");
         }
-        else if(pass.length() == 0)
+        else if(password.length() == 0)
         {
-            showException(this, "Pass is empty");
+            showException(this, "Password is empty");
+        }
+        else if(encryption_pass.length() == 0)
+        {
+            showException(this, "Encryption password is empty");
         }
 
     }

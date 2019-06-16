@@ -82,7 +82,7 @@ public class NfcHelper
         return techFilter;
     }
 
-    private void writeMessage(NdefMessage msg)
+    private boolean writeMessage(NdefMessage msg)
     {
         if(isNdefFormat)
         {
@@ -96,6 +96,7 @@ public class NfcHelper
             catch (Exception e)
             {
                 showException(this, e.getMessage());
+                return false;
             }
         }
         else if(isNdefFormatable)
@@ -111,11 +112,15 @@ public class NfcHelper
             {
                 //Объект ошибки e почему-то возвращает null из getMessage()
                 showException("NdefFormatable", "Couldn`t format to ndef");
+                return false;
             }
         }
+        else
+            return false;
+        return true;
     }
 
-    public void writeTag(byte type, byte[] data)
+    public boolean writeTag(byte type, byte[] data)
     {
         NdefRecord record = null;
         switch(type)
@@ -132,7 +137,7 @@ public class NfcHelper
         }
         NdefRecord[] records = {record};
         NdefMessage message = new NdefMessage(records);
-        writeMessage(message);
+        return writeMessage(message);
     }
 
     public byte[] readTag()

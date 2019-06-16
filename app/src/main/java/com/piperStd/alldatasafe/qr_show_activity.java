@@ -16,7 +16,11 @@ import android.widget.ViewFlipper;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.AuthNode;
+import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.Core.Text;
+import com.piperStd.alldatasafe.UI.ActivityLauncher;
+import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
 import com.piperStd.alldatasafe.utils.Files.FileHelper;
@@ -32,36 +36,42 @@ public class qr_show_activity extends AppCompatActivity implements View.OnClickL
     ImageView qrImage;
     Bitmap barcode;
     ViewFlipper flipper = null;
+    MainNavigationListener navListener = null;
+    NavigationView navigation = null;
+    DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigate_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        flipper = findViewById(R.id.viewFlipper);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navListener = new MainNavigationListener(this, drawerLayout);
+        navigation = findViewById(R.id.nav_view);
         setSupportActionBar(toolbar);
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigation = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        flipper = findViewById(R.id.viewFlipper);
-
+        navigation.setNavigationItemSelectedListener(navListener);
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
+        navigation.getMenu().getItem(0).setChecked(true);
         flipper.setDisplayedChild(1);
         findViewById(R.id.shareQrButton).setOnClickListener(this);
         qrImage = findViewById(R.id.imageView);
         try
         {
             Bundle extras = getIntent().getExtras();
-            String text = (String)extras.get("com.piperstd.alldatasafe.EXTRA_TEXT");
-            String password = (String)extras.get("com.piperstd.alldatasafe.EXTRA_PASS");
-            Text textData = new Text(text);
-            barcode = QrHelper.genBarcode(textData.getEncryptedString(password));
+            String login = (String)extras.get("LOGIN");
+            String password = (String)extras.get("PASSWORD");
+            String encrypt_pass = (String)extras.get("ENCRYPT_PASS");
+            AuthNode node = new AuthNode(AuthServices.VK, login, password);
+            barcode = QrHelper.genBarcode(node.getEncryptedString(encrypt_pass));
             qrImage.setImageBitmap(barcode);
         }
         catch(Exception e)

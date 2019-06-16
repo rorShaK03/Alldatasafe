@@ -21,14 +21,14 @@
         tools:srcCompat="@drawable/ic_qr_code" />
 
     <ImageButton
-        android:layout_width="170dp"
+        android:id="@+id/shareQrButton"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginStart="120dp"
         android:layout_marginEnd="120dp"
         android:layout_marginBottom="40dp"
         android:background="@drawable/qr_share_button"
         android:src="@drawable/ic_menu_share"
-        android:id = "@+id/shareQrButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

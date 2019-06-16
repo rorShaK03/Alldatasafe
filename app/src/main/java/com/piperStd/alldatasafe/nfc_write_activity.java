@@ -8,11 +8,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.AuthNode;
+import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.Core.Text;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
@@ -26,12 +31,14 @@ public class nfc_write_activity extends AppCompatActivity {
 
     NfcAdapter adapter;
     ViewFlipper flipper = null;
+    TextView nfcState;
     PendingIntent pending;
     IntentFilter[] filters;
     String[][] techList = null;
 
-    String pass = null;
-    String text = null;
+    String login = null;
+    String password = null;
+    String encrypt_pass = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +64,11 @@ public class nfc_write_activity extends AppCompatActivity {
     {
         super.onStart();
         flipper.setDisplayedChild(2);
+        nfcState = findViewById(R.id.textNfcWrite);
         Intent intent = getIntent();
-        pass = intent.getStringExtra("com.piperstd.alldatasafe.EXTRA_PASS");
-        text = intent.getStringExtra("com.piperstd.alldatasafe.EXTRA_TEXT");
+        login = intent.getStringExtra("LOGIN");
+        password = intent.getStringExtra("PASSWORD");
+        encrypt_pass = intent.getStringExtra("ENCRYPT_PASS");
     }
 
     @Override
@@ -80,11 +89,26 @@ public class nfc_write_activity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent) {
         NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
-        if(pass != null && text != null)
+        if(login != null && password != null && encrypt_pass != null)
         {
-            Text text = new Text(this.text);
-            String base64 = text.getEncryptedString(this.pass);
-            nfcHelper.writeTag(NfcHelper.TYPE_DATA, base64.getBytes(StandardCharsets.UTF_8));
+            try
+            {
+                AuthNode node = new AuthNode(AuthServices.VK, login, password);
+                String base64 = node.getEncryptedString(encrypt_pass);
+                if (nfcHelper.writeTag(NfcHelper.TYPE_DATA, base64.getBytes(StandardCharsets.UTF_8))) {
+                    nfcState.setText("Запись успешно произведена");
+                    nfcState.setTextColor(Color.GREEN);
+                    Thread.sleep(1000);
+                    finish();
+                } else {
+                    nfcState.setText("Ошибка! Повторите попытку");
+                    nfcState.setTextColor(Color.RED);
+                }
+            }
+            catch(Exception e)
+            {
+                showException(this, e.getMessage());
+            }
         }
     }
 

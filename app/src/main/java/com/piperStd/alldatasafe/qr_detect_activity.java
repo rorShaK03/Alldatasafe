@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.Text;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
@@ -60,6 +61,16 @@ public class qr_detect_activity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigation.setNavigationItemSelectedListener(navListener);
+        handler = new Handler()
+        {
+
+            @Override
+            public void handleMessage(Message msg)
+            {
+                new DecryptTask(edit.getText().toString()).execute((Bitmap)msg.obj);
+            }
+
+        };
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_ID);
@@ -79,29 +90,16 @@ public class qr_detect_activity extends AppCompatActivity {
         textView = findViewById(R.id.qr_detect_textView);
         edit = findViewById(R.id.passQrDetect);
         qrHelper = new QrHelper();
-        handler = new Handler()
-        {
-
-            @Override
-            public void handleMessage(Message msg)
-            {
-                new DecryptTask(edit.getText().toString()).execute((Bitmap)msg.obj);
-            }
-
-        };
-
         navigation.getMenu().getItem(1).setChecked(true);
-        if(!camera.isOpen() && camera.couldBeOpened)
-        {
+        if(camera != null && !camera.isOpen() && camera.couldBeOpened)
             camera.openCamera();
-        }
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
-        if(camera.isOpen())
+        if(camera != null && camera.isOpen())
         {
             camera.closeCamera();
         }
@@ -115,11 +113,12 @@ public class qr_detect_activity extends AppCompatActivity {
             if(results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED)
             {
                 camera = new CameraHelper(this, (TextureView) findViewById(R.id.camera_preview));
+                camera.openCamera();
             }
         }
     }
 
-    class DecryptTask extends AsyncTask<Bitmap, Void, String>
+    class DecryptTask extends AsyncTask<Bitmap, Void, AuthNode>
     {
         private String pass;
 
@@ -129,22 +128,22 @@ public class qr_detect_activity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Bitmap[] params)
+        protected AuthNode doInBackground(Bitmap[] params)
         {
             String text = qrHelper.readBarcode(qr_detect_activity.super.getApplicationContext(), params[0]);
             if (text != null)
             {
-                Text textData = Text.DecryptAndParse(text, pass);
-                return textData.getString();
+                AuthNode node = AuthNode.DecryptAndParse(text, pass);
+                return node;
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(String res)
+        protected void onPostExecute(AuthNode res)
         {
             if(res != null)
-                textView.setText(res);
+                textView.setText(res.login + " " + res.password);
         }
     }
 }

@@ -32,32 +32,39 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <activity android:name=".decrypt_activity"></activity>
-        <activity android:name=".qr_detect_activity" />
-        <activity android:name=".nfc_decode_activity" />
-        <activity android:name=".nfc_write_activity" />
+        <activity android:name=".decrypt_activity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".qr_detect_activity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".nfc_decode_activity"
+                  android:screenOrientation="portrait">
+                    <intent-filter>
+                        <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                        <category android:name="android.intent.category.DEFAULT" />
+
+                        <data
+                            android:host="ext"
+                            android:pathPrefix="/com.piperstd.alldatasafe:data"
+                            android:scheme="vnd.android.nfc" />
+                    </intent-filter>
+        </activity>
+        <activity android:name=".nfc_write_activity"
+                  android:screenOrientation="portrait"/>
         <activity
             android:name=".qr_show_activity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".crypt_activity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="ext"
-                    android:pathPrefix="/com.piperstd.alldatasafe:data"
-                    android:scheme="vnd.android.nfc" />
             </intent-filter>
         </activity>
     </application>

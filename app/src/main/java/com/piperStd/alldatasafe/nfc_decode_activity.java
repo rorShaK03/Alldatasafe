@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.Text;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
@@ -104,9 +105,9 @@ public class nfc_decode_activity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent) {
         NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
-        Text text = Text.DecryptAndParse(new String(nfcHelper.readTag()), passField.getText().toString());
-        if(text != null)
-            decryptedField.setText(text.getString());
+        AuthNode node = AuthNode.DecryptAndParse(new String(nfcHelper.readTag()), passField.getText().toString());
+        if(node != null)
+            decryptedField.setText(node.login + " " + node.password);
     }
 
 }

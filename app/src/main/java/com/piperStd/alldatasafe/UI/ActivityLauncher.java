@@ -20,13 +20,14 @@ public class ActivityLauncher
         this.context = context;
     }
 
-    public void launchQRCodeActivity(String text, String password)
+    public void launchQRCodeActivity(String login, String password, String encrypt_password)
     {
         try {
             Intent intent = new Intent(context, qr_show_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_TEXT", text);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_PASS", password);
+            intent.putExtra("LOGIN", login);
+            intent.putExtra("PASSWORD", password);
+            intent.putExtra("ENCRYPT_PASS", encrypt_password);
             context.startActivity(intent);
         }
         catch(Exception e)
@@ -35,13 +36,14 @@ public class ActivityLauncher
         }
     }
 
-    public void launchNFCActivity(String text, String password)
+    public void launchNFCActivity(String login, String password, String encrypt_password)
     {
         try {
             Intent intent = new Intent(context, nfc_write_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_TEXT", text);
-            intent.putExtra("com.piperstd.alldatasafe.EXTRA_PASS", password);
+            intent.putExtra("LOGIN", login);
+            intent.putExtra("PASSWORD", password);
+            intent.putExtra("ENCRYPT_PASS", encrypt_password);
             context.startActivity(intent);
         }
         catch(Exception e)
