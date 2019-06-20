@@ -1,28 +1,40 @@
 package com.piperStd.alldatasafe;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import androidx.appcompat.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.ViewFlipper;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.*;
 
 import com.google.android.material.navigation.NavigationView;
+import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 
 
 public class crypt_activity extends AppCompatActivity implements View.OnClickListener{
 
+    byte service = AuthServices.GITHUB;
     ViewFlipper flipper = null;
+    Context context = null;
+    AppCompatImageView service_icon = null;
     NavigationView navigation = null;
     AppCompatButton nextBtn;
     DrawerLayout drawerLayout;
@@ -32,6 +44,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         launcher = new ActivityLauncher(this);
         setContentView(R.layout.navigate_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -54,7 +67,39 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         flipper.setDisplayedChild(0);
         navigation.getMenu().getItem(0).setChecked(true);
         nextBtn = findViewById(R.id.button);
+        service_icon = findViewById(R.id.service_icon);
         nextBtn.setOnClickListener(this);
+        service_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(context, v);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId())
+                        {
+                            case R.id.vk_item:
+                                service_icon.setImageResource(R.drawable.ic_vk);
+                                service = AuthServices.VK;
+                                return true;
+                            case R.id.github_item:
+                                service_icon.setImageResource(R.drawable.ic_github);
+                                service = AuthServices.GITHUB;
+                                return true;
+                            default:
+                                return false;
+
+                        }
+                    }
+                });
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.services_menu, popup.getMenu());
+                @SuppressLint("apiRestricted")
+                MenuPopupHelper helper = new MenuPopupHelper(context, (MenuBuilder)popup.getMenu(), v);
+                helper.setForceShowIcon(true);
+                helper.show();
+            }
+        });
     }
 
     @Override
@@ -91,13 +136,10 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         String encryption_pass = editPass.getText().toString();
         if(password.length() != 0 && login.length() != 0 && encryption_pass.length() != 0) {
             switch (placeId) {
-                case R.id.radioNFC:
-                    launcher.launchNFCActivity(login, password, encryption_pass);
-                    break;
                 case R.id.radioQR:
-                    launcher.launchQRCodeActivity(login, password, encryption_pass);
+                    launcher.launchQRCodeActivity(service, login, password, encryption_pass);
                     break;
-                case R.id.radioServer:
+                case R.id.radioText:
                     break;
                 default:
                     showException(this, "Choose place for saving");

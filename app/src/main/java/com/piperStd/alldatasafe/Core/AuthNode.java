@@ -48,18 +48,15 @@ public class AuthNode
         byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
         this.data = new byte[loginBytes.length + passwordBytes.length + 2];
         this.data[0] = service;
-        Log.d("data_length", Integer.toString(data.length));
         for(int i = 1; i <= loginBytes.length; i++)
         {
             data[i] = loginBytes[i - 1];
         }
-        Log.d("data_length", Integer.toString(data.length));
         data[loginBytes.length + 1] = separator;
         for(int i = 1; i <= passwordBytes.length; i++)
         {
             data[i + loginBytes.length + 1] = passwordBytes[i - 1];
         }
-        Log.d("data_length", Integer.toString(data.length));
     }
 
     public String getEncryptedString(String password)
@@ -73,7 +70,6 @@ public class AuthNode
 
         for(int i = 0; i < data.length; i++)
             finalData[i + typeNameBytes.length + 1] = data[i];
-        Log.d("finalData", new String(finalData));
         Crypto crypto = new Crypto(finalData, password);
         crypto.encrypt();
         return crypto.genBase64FromEncryptedData();
@@ -83,19 +79,18 @@ public class AuthNode
     {
         Crypto crypto = Crypto.parseBase64Encrypted(encrypted);
         crypto.password = password;
-        crypto.decrypt();
-        byte[] decrypted = crypto.data;
+        byte[] decrypted = crypto.decrypt();
+        if(decrypted == null)
+            return null;
         byte[] typeBytes = new byte[typeName.length()];
         int i = 0;
-        while(i < decrypted.length && decrypted[i] != separator)
+        while(i < typeName.length() && decrypted[i] != separator)
         {
             typeBytes[i] = decrypted[i];
             i++;
         }
-        Log.d("type", new String(typeBytes, StandardCharsets.UTF_8));
         if(new String(typeBytes, StandardCharsets.UTF_8).equals(typeName))
         {
-            Log.d("state", "true");
             byte[] dataBytes = new byte[decrypted.length - typeName.length() - 1];
             for(int j = 0; j < dataBytes.length; j++)
             {

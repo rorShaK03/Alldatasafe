@@ -59,7 +59,7 @@ public class Text
         byte[] decrypted = crypto.data;
         byte[] typeBytes = new byte[typeName.length()];
         int i = 0;
-        while(i < decrypted.length && decrypted[i] != separator)
+        while(i < typeName.length() && decrypted[i] != separator)
         {
             typeBytes[i] = decrypted[i];
             i++;

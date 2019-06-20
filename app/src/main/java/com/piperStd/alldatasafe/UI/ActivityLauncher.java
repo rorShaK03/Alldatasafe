@@ -20,13 +20,14 @@ public class ActivityLauncher
         this.context = context;
     }
 
-    public void launchQRCodeActivity(String login, String password, String encrypt_password)
+    public void launchQRCodeActivity(byte service, String login, String password, String encrypt_password)
     {
         try {
             Intent intent = new Intent(context, qr_show_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             intent.putExtra("LOGIN", login);
             intent.putExtra("PASSWORD", password);
+            intent.putExtra("SERVICE", service);
             intent.putExtra("ENCRYPT_PASS", encrypt_password);
             context.startActivity(intent);
         }
@@ -36,13 +37,14 @@ public class ActivityLauncher
         }
     }
 
-    public void launchNFCActivity(String login, String password, String encrypt_password)
+    public void launchNFCActivity(byte service, String login, String password, String encrypt_password)
     {
         try {
             Intent intent = new Intent(context, nfc_write_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             intent.putExtra("LOGIN", login);
             intent.putExtra("PASSWORD", password);
+            intent.putExtra("SERVICE", service);
             intent.putExtra("ENCRYPT_PASS", encrypt_password);
             context.startActivity(intent);
         }

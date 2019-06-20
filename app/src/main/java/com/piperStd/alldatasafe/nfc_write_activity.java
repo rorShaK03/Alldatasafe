@@ -36,6 +36,7 @@ public class nfc_write_activity extends AppCompatActivity {
     IntentFilter[] filters;
     String[][] techList = null;
 
+    byte service;
     String login = null;
     String password = null;
     String encrypt_pass = null;
@@ -68,6 +69,7 @@ public class nfc_write_activity extends AppCompatActivity {
         Intent intent = getIntent();
         login = intent.getStringExtra("LOGIN");
         password = intent.getStringExtra("PASSWORD");
+        service = intent.getByteExtra("SERVICE", AuthServices.VK);
         encrypt_pass = intent.getStringExtra("ENCRYPT_PASS");
     }
 
@@ -93,7 +95,7 @@ public class nfc_write_activity extends AppCompatActivity {
         {
             try
             {
-                AuthNode node = new AuthNode(AuthServices.VK, login, password);
+                AuthNode node = new AuthNode(service, login, password);
                 String base64 = node.getEncryptedString(encrypt_pass);
                 if (nfcHelper.writeTag(NfcHelper.TYPE_DATA, base64.getBytes(StandardCharsets.UTF_8))) {
                     nfcState.setText("Запись успешно произведена");

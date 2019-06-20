@@ -32,7 +32,8 @@ public class nfc_decode_activity extends AppCompatActivity {
     DrawerLayout drawerLayout = null;
     NavigationView navigation;
     EditText passField = null;
-    TextView decryptedField = null;
+    TextView login_field = null;
+    TextView pass_field = null;
     ViewFlipper flipper = null;
     PendingIntent pending;
     IntentFilter[] filters;
@@ -50,7 +51,8 @@ public class nfc_decode_activity extends AppCompatActivity {
         setContentView(R.layout.navigate_screen);
         Toolbar toolbar = findViewById(R.id.toolbar);
         passField = findViewById(R.id.passNfcDecode);
-        decryptedField = findViewById(R.id.decryptedField);
+        login_field = findViewById(R.id.nfc_login_show);
+        pass_field = findViewById(R.id.nfc_password_show);
         drawerLayout = findViewById(R.id.drawer_layout);
         navListener = new MainNavigationListener(this, drawerLayout);
         navigation = findViewById(R.id.nav_view);
@@ -107,7 +109,10 @@ public class nfc_decode_activity extends AppCompatActivity {
         NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
         AuthNode node = AuthNode.DecryptAndParse(new String(nfcHelper.readTag()), passField.getText().toString());
         if(node != null)
-            decryptedField.setText(node.login + " " + node.password);
+        {
+            login_field.setText(node.login);
+            pass_field.setText(node.password);
+        }
     }
 
 }

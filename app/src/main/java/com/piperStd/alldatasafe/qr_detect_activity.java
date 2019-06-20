@@ -3,6 +3,7 @@ package com.piperStd.alldatasafe;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,15 +17,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.Core.AuthNode;
-import com.piperStd.alldatasafe.Core.Text;
-import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
+import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
@@ -33,7 +35,9 @@ import com.piperStd.alldatasafe.utils.camera.CameraHelper;
 public class qr_detect_activity extends AppCompatActivity {
 
     final int CAMERA_PERMISSION_ID = 0;
-    TextView textView;
+    AppCompatImageView serviceImage = null;
+    TextView login_field;
+    TextView pass_field;
     EditText edit;
     public Handler handler;
     QrHelper qrHelper;
@@ -61,16 +65,6 @@ public class qr_detect_activity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigation.setNavigationItemSelectedListener(navListener);
-        handler = new Handler()
-        {
-
-            @Override
-            public void handleMessage(Message msg)
-            {
-                new DecryptTask(edit.getText().toString()).execute((Bitmap)msg.obj);
-            }
-
-        };
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_ID);
@@ -81,16 +75,27 @@ public class qr_detect_activity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("HandlerLeak")
     @Override
     protected void onStart()
     {
         super.onStart();
         flipper.setDisplayedChild(4);
-        textView = findViewById(R.id.qr_detect_textView);
+        navigation.getMenu().getItem(1).setChecked(true);
+        login_field = findViewById(R.id.qr_login_show);
+        pass_field = findViewById(R.id.qr_password_show);
+        serviceImage = findViewById(R.id.qr_service_icon);
         edit = findViewById(R.id.passQrDetect);
         qrHelper = new QrHelper();
-        navigation.getMenu().getItem(1).setChecked(true);
+        handler = new Handler()
+        {
+
+            @Override
+            public void handleMessage(Message msg)
+            {
+                new DecryptTask(edit.getText().toString()).execute((Bitmap)msg.obj);
+            }
+
+        };
         if(camera != null && !camera.isOpen() && camera.couldBeOpened)
             camera.openCamera();
     }
@@ -143,7 +148,19 @@ public class qr_detect_activity extends AppCompatActivity {
         protected void onPostExecute(AuthNode res)
         {
             if(res != null)
-                textView.setText(res.login + " " + res.password);
+            {
+                login_field.setText(res.login);
+                pass_field.setText(res.password);
+                switch(res.service)
+                {
+                    case AuthServices.VK:
+                        serviceImage.setImageResource(R.drawable.ic_vk);
+                        break;
+                    case AuthServices.GITHUB:
+                        serviceImage.setImageResource(R.drawable.ic_github);
+                        break;
+                }
+            }
         }
     }
 }
