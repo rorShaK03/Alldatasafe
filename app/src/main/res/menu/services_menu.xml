@@ -13,5 +13,17 @@
         android:icon="@drawable/ic_github"
         />
 
+    <item
+        android:id="@+id/instagram_item"
+        android:title="Instagram"
+        android:icon="@drawable/ic_instagram"
+        />
+
+    <item
+        android:id="@+id/steam_item"
+        android:title="Steam"
+        android:icon="@drawable/ic_steam"
+        />
+
 
 </menu>

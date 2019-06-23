@@ -86,6 +86,14 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
                                 service_icon.setImageResource(R.drawable.ic_github);
                                 service = AuthServices.GITHUB;
                                 return true;
+                            case R.id.instagram_item:
+                                service_icon.setImageResource(R.drawable.ic_instagram);
+                                service = AuthServices.INSTAGRAM;
+                                return true;
+                            case R.id.steam_item:
+                                service_icon.setImageResource(R.drawable.ic_steam);
+                                service = AuthServices.STEAM;
+                                return true;
                             default:
                                 return false;
 

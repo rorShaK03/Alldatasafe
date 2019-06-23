@@ -159,6 +159,12 @@ public class qr_detect_activity extends AppCompatActivity {
                     case AuthServices.GITHUB:
                         serviceImage.setImageResource(R.drawable.ic_github);
                         break;
+                    case AuthServices.INSTAGRAM:
+                        serviceImage.setImageResource(R.drawable.ic_instagram);
+                        break;
+                    case AuthServices.STEAM:
+                        serviceImage.setImageResource(R.drawable.ic_steam);
+                        break;
                 }
             }
         }

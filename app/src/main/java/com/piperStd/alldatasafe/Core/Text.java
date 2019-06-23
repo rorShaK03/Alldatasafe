@@ -36,7 +36,7 @@ public class Text
         for(int i = 0; i < typeNameBytes.length; i++)
             finalData[i] = typeNameBytes[i];
 
-        finalData[typeNameBytes.length] = this.separator;
+        finalData[typeNameBytes.length] = separator;
 
         for(int i = 0; i < data.length; i++)
             finalData[i + typeNameBytes.length + 1] = data[i];
