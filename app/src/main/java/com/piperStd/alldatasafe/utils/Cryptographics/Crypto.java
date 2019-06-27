@@ -7,6 +7,8 @@ import com.piperStd.alldatasafe.utils.Others.tools;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -68,6 +70,14 @@ public class Crypto {
             showException(this, "Couldn`t get SHA-256 hash: " + e.getMessage());
         }
         return hash;
+    }
+
+    public static byte[] keygen256()
+    {
+        SecureRandom random = new SecureRandom();
+        byte[] key = new byte[256];
+        random.nextBytes(key);
+        return key;
     }
 
     private void AES256CBC_encrypt()

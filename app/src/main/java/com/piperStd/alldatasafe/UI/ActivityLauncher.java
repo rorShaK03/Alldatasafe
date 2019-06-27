@@ -54,6 +54,20 @@ public class ActivityLauncher
         }
     }
 
+    public void launchKeygenActivity()
+    {
+        try {
+            Intent intent = new Intent(context, nfc_write_activity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.setAction("keygen");
+            context.startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
+    }
+
     public void launchNfcDecodeActivity()
     {
         try {

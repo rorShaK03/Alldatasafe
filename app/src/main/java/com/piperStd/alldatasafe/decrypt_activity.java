@@ -49,12 +49,12 @@ public class decrypt_activity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
+        navigation.getMenu().getItem(1).setChecked(true);
         flipper.setDisplayedChild(5);
         qr_card = findViewById(R.id.qr_card);
         nfc_card = findViewById(R.id.nfc_card);
         qr_card.setOnClickListener(new DecryptOnClickListener());
         nfc_card.setOnClickListener(new DecryptOnClickListener());
-        navigation.getMenu().getItem(1).setChecked(true);
     }
 
     @Override

@@ -33,6 +33,10 @@ public class MainNavigationListener implements NavigationView.OnNavigationItemSe
                 break;
             case R.id.nav_decrypt:
                 launcher.launchDecryptActivity();
+                break;
+            case R.id.nav_keygen:
+                launcher.launchKeygenActivity();
+                break;
         }
         drawer.closeDrawer(Gravity.LEFT);
         return true;

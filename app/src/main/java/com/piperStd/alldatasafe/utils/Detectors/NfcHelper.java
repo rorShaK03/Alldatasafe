@@ -21,8 +21,9 @@ import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class NfcHelper
 {
-    public static final byte TYPE_DATA = 0;
-    public static final byte TYPE_KEY = 1;
+    public static final byte TYPE_UNKNOWN = 0x00;
+    public static final byte TYPE_DATA = 0x01;
+    public static final byte TYPE_KEY = 0x02;
 
     private Tag tag;
     private NdefMessage ndefMessage = null;

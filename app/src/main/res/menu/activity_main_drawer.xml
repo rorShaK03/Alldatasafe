@@ -15,6 +15,10 @@
                 android:icon = "@drawable/ic_lock_open"
                 android:title="@string/decrypt" />
             <item
+                android:id="@+id/nav_keygen"
+                android:icon = "@drawable/ic_key"
+                android:title="@string/keygen" />
+            <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/settings" />

@@ -12,6 +12,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -19,6 +20,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.Core.Text;
+import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
 
@@ -31,15 +33,14 @@ public class nfc_write_activity extends AppCompatActivity {
 
     NfcAdapter adapter;
     ViewFlipper flipper = null;
+    NavigationView navigation;
     TextView nfcState;
     PendingIntent pending;
     IntentFilter[] filters;
     String[][] techList = null;
 
-    byte service;
-    String login = null;
-    String password = null;
-    String encrypt_pass = null;
+    String string_data = null;
+    byte data_type = NfcHelper.TYPE_UNKNOWN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +49,10 @@ public class nfc_write_activity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigation = findViewById(R.id.nav_view);
+        navigation = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
+        navigation.setNavigationItemSelectedListener(new MainNavigationListener(this, drawerLayout));
         toggle.syncState();
         flipper = findViewById(R.id.viewFlipper);
         adapter = NfcAdapter.getDefaultAdapter(this);
@@ -67,10 +69,25 @@ public class nfc_write_activity extends AppCompatActivity {
         flipper.setDisplayedChild(2);
         nfcState = findViewById(R.id.textNfcWrite);
         Intent intent = getIntent();
-        login = intent.getStringExtra("LOGIN");
-        password = intent.getStringExtra("PASSWORD");
-        service = intent.getByteExtra("SERVICE", AuthServices.VK);
-        encrypt_pass = intent.getStringExtra("ENCRYPT_PASS");
+        switch(intent.getAction()) {
+            case "authNode":
+                String login = intent.getStringExtra("LOGIN");
+                String password = intent.getStringExtra("PASSWORD");
+                byte service = intent.getByteExtra("SERVICE", AuthServices.UNKNOWN);
+                String encrypt_pass = intent.getStringExtra("ENCRYPT_PASS");
+                if(login != null && password != null && encrypt_pass != null) {
+                    AuthNode node = new AuthNode(service, login, password);
+                    string_data = node.getEncryptedString(encrypt_pass);
+                    data_type = NfcHelper.TYPE_DATA;
+                }
+                else
+                    showException(this, "Could`t parse credentials");
+                break;
+            case "keygen":
+                navigation.getMenu().getItem(2).setChecked(true);
+                string_data = Base64.encodeToString(Crypto.keygen256(), Base64.DEFAULT);
+                data_type = NfcHelper.TYPE_KEY;
+        }
     }
 
     @Override
@@ -91,13 +108,11 @@ public class nfc_write_activity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent) {
         NfcHelper nfcHelper = new NfcHelper(intent.getExtras());
-        if(login != null && password != null && encrypt_pass != null)
+        if(string_data != null && data_type != NfcHelper.TYPE_UNKNOWN)
         {
             try
             {
-                AuthNode node = new AuthNode(service, login, password);
-                String base64 = node.getEncryptedString(encrypt_pass);
-                if (nfcHelper.writeTag(NfcHelper.TYPE_DATA, base64.getBytes(StandardCharsets.UTF_8))) {
+                if (nfcHelper.writeTag(data_type, string_data.getBytes(StandardCharsets.UTF_8))) {
                     nfcState.setText("Запись успешно произведена");
                     nfcState.setTextColor(Color.GREEN);
                     Thread.sleep(1000);

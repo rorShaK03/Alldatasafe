@@ -13,6 +13,7 @@
     <string name="abilities">Возможности</string>
     <string name="encrypt">Шифровка</string>
     <string name="decrypt">Расшифровка</string>
+    <string name="keygen">Создать ключ-карту</string>
     <string name="info">Информация</string>
     <string name="about">О приложении</string>
 </resources>
