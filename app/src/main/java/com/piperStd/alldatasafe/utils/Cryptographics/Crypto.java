@@ -41,6 +41,12 @@ public class Crypto {
         credentials = new Credentials();
     }
 
+    public Crypto(byte[] data)
+    {
+        this.data = data;
+        credentials = new Credentials();
+    }
+
     public Crypto(byte[] data, String password, byte[] iv)
     {
         this.data = data;
@@ -56,7 +62,7 @@ public class Crypto {
         credentials.iv = iv;
     }
 
-    private byte[] getSHA256(byte[] data)
+    private static byte[] getSHA256(byte[] data)
     {
         MessageDigest md = null;
         byte[] hash = null;
@@ -67,16 +73,15 @@ public class Crypto {
         }
         catch(Exception e)
         {
-            showException(this, "Couldn`t get SHA-256 hash: " + e.getMessage());
+            showException(Crypto.class.getName(), "Couldn`t get SHA-256 hash: " + e.getMessage());
         }
         return hash;
     }
 
     public static byte[] keygen256()
     {
-        SecureRandom random = new SecureRandom();
-        byte[] key = new byte[256];
-        random.nextBytes(key);
+        byte[] key = new byte[32];
+        HighEntropyRandom.genRandomFromUrandom(key);
         return key;
     }
 
@@ -115,8 +120,13 @@ public class Crypto {
 
     public void KDF(String pass)
     {
+        credentials.key = getKDF(pass);
+    }
+
+    public static byte[] getKDF(String pass)
+    {
         byte[] passBytes = tools.toBytes(pass);
-        credentials.key = getSHA256(passBytes);
+        return getSHA256(passBytes);
     }
 
     public byte[] encrypt()
@@ -127,9 +137,33 @@ public class Crypto {
         return data;
     }
 
+    public byte[] encrypt(byte[] key)
+    {
+        credentials.key = key;
+        AES256CBC_encrypt();
+        data = encrypted;
+        return data;
+    }
+
     public byte[] decrypt()
     {
         KDF(password);
+        if(AES256CBC_decrypt())
+        {
+            valid = true;
+            data = decrypted;
+        }
+        else
+        {
+            valid = false;
+            data = null;
+        }
+        return data;
+    }
+
+    public byte[] decrypt(byte[] key)
+    {
+        credentials.key = key;
         if(AES256CBC_decrypt())
         {
             valid = true;

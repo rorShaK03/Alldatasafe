@@ -21,46 +21,54 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".internal_decode_activity"></activity>
+        <activity android:name=".internal_show_activity" />
+        <activity android:name=".text_decode_activity" />
+        <activity android:name=".text_show_activity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.piperStd.alldatasafe.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <activity android:name=".decrypt_activity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".qr_detect_activity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".nfc_decode_activity"
-                  android:screenOrientation="portrait">
-                    <intent-filter>
-                        <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+        <activity
+            android:name=".decrypt_activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".qr_detect_activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".nfc_decode_activity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
-                        <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT" />
 
-                        <data
-                            android:host="ext"
-                            android:pathPrefix="/com.piperstd.alldatasafe:data"
-                            android:scheme="vnd.android.nfc" />
-                    </intent-filter>
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/com.piperstd.alldatasafe:data"
+                    android:scheme="vnd.android.nfc" />
+            </intent-filter>
         </activity>
-        <activity android:name=".nfc_write_activity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".nfc_write_activity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".qr_show_activity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".crypt_activity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

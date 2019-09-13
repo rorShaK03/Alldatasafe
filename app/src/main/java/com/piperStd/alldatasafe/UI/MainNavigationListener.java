@@ -1,6 +1,7 @@
 package com.piperStd.alldatasafe.UI;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 

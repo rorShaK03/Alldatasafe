@@ -8,7 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -19,15 +19,14 @@ import android.widget.ViewFlipper;
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.AuthServices;
-import com.piperStd.alldatasafe.Core.Text;
+import com.piperStd.alldatasafe.UI.ActivityLauncher;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
-import com.piperStd.alldatasafe.utils.Detectors.NfcHelper;
+import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
 
 import java.nio.charset.StandardCharsets;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
-import static com.piperStd.alldatasafe.utils.Others.tools.toBytes;
 
 public class nfc_write_activity extends AppCompatActivity {
 

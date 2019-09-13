@@ -2,8 +2,8 @@ package com.piperStd.alldatasafe.Core;
 
 public class AuthServices
 {
-    public static final byte UNKNOWN = 0x00;
-    public static final byte VK = 0x01;
+    public static final byte UNKNOWN = 0x08;
+    public static final byte VK = 0x09;
     public static final byte GITHUB = 0x02;
     public static final byte YANDEX = 0x03;
     public static final byte FACEBOOK = 0x04;

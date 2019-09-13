@@ -3,17 +3,20 @@
     <string name="settings">Настройки</string>
     <string name="str_nfc">NFC</string>
     <string name="str_qr">QR-код</string>
-    <string name="str_text">Текст</string>
+    <string name="internal">Внутренняя память</string>
     <string name="encryption_pass">Пароль шифрования</string>
     <string name="need_save">Нужно сохранить</string>
     <string name="str_chs_place">Выберите место для хранения зашифрованных данных</string>
+    <string name="input_chiphertext">Введите строку шифротекста:</string>
     <string name="next">Далее</string>
     <string name="nav_drawer_close">Close navigation drawer</string>
     <string name="nav_drawer_open">Open navigation drawer</string>
     <string name="abilities">Возможности</string>
     <string name="encrypt">Шифровка</string>
     <string name="decrypt">Расшифровка</string>
+    <string name="to_decrypt">Расшифровать</string>
     <string name="keygen">Создать ключ-карту</string>
+    <string name="use_nfc">NFC-ключ</string>
     <string name="info">Информация</string>
     <string name="about">О приложении</string>
 </resources>

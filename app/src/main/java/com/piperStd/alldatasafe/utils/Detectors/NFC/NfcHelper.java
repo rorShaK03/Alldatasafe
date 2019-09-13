@@ -1,4 +1,4 @@
-package com.piperStd.alldatasafe.utils.Detectors;
+package com.piperStd.alldatasafe.utils.Detectors.NFC;
 
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -148,6 +148,12 @@ public class NfcHelper
         {
             record = ndefMessage.getRecords()[0];
             return record.getPayload();
+        }
+        try {
+            Ndef.get(tag).close();
+        }
+        catch(Exception e) {
+            showException(this, e.getMessage());
         }
         return null;
     }

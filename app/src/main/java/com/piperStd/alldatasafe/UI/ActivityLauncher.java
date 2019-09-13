@@ -2,13 +2,19 @@ package com.piperStd.alldatasafe.UI;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.widget.Toast;
 
 import com.piperStd.alldatasafe.crypt_activity;
+import com.piperStd.alldatasafe.internal_decode_activity;
+import com.piperStd.alldatasafe.internal_show_activity;
 import com.piperStd.alldatasafe.nfc_decode_activity;
 import com.piperStd.alldatasafe.nfc_write_activity;
 import com.piperStd.alldatasafe.qr_detect_activity;
 import com.piperStd.alldatasafe.qr_show_activity;
 import com.piperStd.alldatasafe.decrypt_activity;
+import com.piperStd.alldatasafe.text_decode_activity;
+import com.piperStd.alldatasafe.text_show_activity;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
@@ -20,7 +26,7 @@ public class ActivityLauncher
         this.context = context;
     }
 
-    public void launchQRCodeActivity(byte service, String login, String password, String encrypt_password)
+    public void launchQRCodeActivity(byte service, String login, String password, byte[] key)
     {
         try {
             Intent intent = new Intent(context, qr_show_activity.class);
@@ -28,7 +34,41 @@ public class ActivityLauncher
             intent.putExtra("LOGIN", login);
             intent.putExtra("PASSWORD", password);
             intent.putExtra("SERVICE", service);
-            intent.putExtra("ENCRYPT_PASS", encrypt_password);
+            intent.putExtra("KEY", key);
+            context.startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
+    }
+
+    public void launchTextShowActivity(byte service, String login, String password, byte[] key)
+    {
+        try {
+            Intent intent = new Intent(context, text_show_activity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.putExtra("LOGIN", login);
+            intent.putExtra("PASSWORD", password);
+            intent.putExtra("SERVICE", service);
+            intent.putExtra("KEY", key);
+            context.startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
+    }
+
+    public void launchInternalShowActivity(byte service, String login, String password, byte[] key)
+    {
+        try {
+            Intent intent = new Intent(context, internal_show_activity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.putExtra("LOGIN", login);
+            intent.putExtra("PASSWORD", password);
+            intent.putExtra("SERVICE", service);
+            intent.putExtra("KEY", key);
             context.startActivity(intent);
         }
         catch(Exception e)
@@ -57,10 +97,18 @@ public class ActivityLauncher
     public void launchKeygenActivity()
     {
         try {
-            Intent intent = new Intent(context, nfc_write_activity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.setAction("keygen");
-            context.startActivity(intent);
+            if (context.getPackageManager().hasSystemFeature(
+                    PackageManager.FEATURE_NFC_HOST_CARD_EMULATION_NFCF)) {
+                Intent intent = new Intent(context, nfc_write_activity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.setAction("keygen");
+                context.startActivity(intent);
+            }
+            else
+            {
+                Toast toast = Toast.makeText(this.context, "У вас нет NFC-модуля!", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
         catch(Exception e)
         {
@@ -98,6 +146,32 @@ public class ActivityLauncher
     {
         try {
             Intent intent = new Intent(context, qr_detect_activity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            context.startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
+    }
+
+    public void launchTextDecodeActivity()
+    {
+        try {
+            Intent intent = new Intent(context, text_decode_activity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            context.startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            showException(this, e.getMessage());
+        }
+    }
+
+    public void launchInternalDecodeActivity()
+    {
+        try {
+            Intent intent = new Intent(context, internal_decode_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             context.startActivity(intent);
         }

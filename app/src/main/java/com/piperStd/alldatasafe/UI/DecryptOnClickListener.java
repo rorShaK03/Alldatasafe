@@ -1,5 +1,6 @@
 package com.piperStd.alldatasafe.UI;
 
+import android.util.Log;
 import android.view.View;
 
 import com.piperStd.alldatasafe.R;
@@ -15,8 +16,11 @@ public class DecryptOnClickListener implements View.OnClickListener
             case R.id.qr_card:
                 launcher.launchQrDetectActivity();
                 break;
-            case R.id.nfc_card:
-                launcher.launchNfcDecodeActivity();
+            case R.id.text_card:
+                launcher.launchTextDecodeActivity();
+                break;
+            case R.id.internal_card:
+                launcher.launchInternalDecodeActivity();
                 break;
         }
     }

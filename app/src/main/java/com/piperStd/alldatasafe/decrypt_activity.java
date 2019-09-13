@@ -19,7 +19,8 @@ import com.piperStd.alldatasafe.UI.MainNavigationListener;
 public class decrypt_activity extends AppCompatActivity {
 
     CardView qr_card;
-    CardView nfc_card;
+    CardView text_card;
+    CardView internal_card;
     ViewFlipper flipper = null;
     NavigationView navigation = null;
     AppCompatButton nextBtn;
@@ -52,9 +53,11 @@ public class decrypt_activity extends AppCompatActivity {
         navigation.getMenu().getItem(1).setChecked(true);
         flipper.setDisplayedChild(5);
         qr_card = findViewById(R.id.qr_card);
-        nfc_card = findViewById(R.id.nfc_card);
+        text_card = findViewById(R.id.text_card);
+        internal_card = findViewById(R.id.internal_card);
         qr_card.setOnClickListener(new DecryptOnClickListener());
-        nfc_card.setOnClickListener(new DecryptOnClickListener());
+        text_card.setOnClickListener(new DecryptOnClickListener());
+        internal_card.setOnClickListener(new DecryptOnClickListener());
     }
 
     @Override

@@ -45,12 +45,16 @@
             android:layout_height="match_parent"
             android:id = "@+id/viewFlipper">
 
-            <include layout="@layout/crypt_screen" android:id = "@+id/includeCrypt"/>
-            <include layout="@layout/qr_code_show_screen" android:id = "@+id/includeQR"/>
-            <include layout="@layout/nfc_write_screen" android:id = "@+id/includeNFC"/>
-            <include layout="@layout/nfc_decode_screen" android:id = "@+id/includeNFCdecode"/>
-            <include layout="@layout/qr_detect_screen" android:id = "@+id/includeQRdetect"/>
-            <include layout="@layout/decrypt_screen" android:id = "@+id/includeDecrypt"/>
+            <include layout="@layout/crypt_screen" android:id = "@+id/includeCrypt"/>  <!-- 0 -->
+            <include layout="@layout/qr_code_show_screen" android:id = "@+id/includeQR"/> <!-- 1 -->
+            <include layout="@layout/nfc_write_screen" android:id = "@+id/includeNFC"/> <!-- 2 -->
+            <include layout="@layout/nfc_decode_screen" android:id = "@+id/includeNFCdecode"/> <!-- 3 -->
+            <include layout="@layout/qr_detect_screen" android:id = "@+id/includeQRdetect"/> <!-- 4 -->
+            <include layout="@layout/decrypt_screen" android:id = "@+id/includeDecrypt"/> <!-- 5 -->
+            <include layout="@layout/text_show_screen" android:id = "@+id/includeTextShow"/> <!-- 6 -->
+            <include layout="@layout/text_decode_screen" android:id = "@+id/includeTextDecode"/> <!-- 7 -->
+            <include layout="@layout/internal_show_screen" android:id = "@+id/includeInternalShow"/> <!-- 8 -->
+            <include layout="@layout/internal_decode_screen" android:id = "@+id/includeInternalDecode"/> <!-- 9 -->
 
         </ViewFlipper>
 
