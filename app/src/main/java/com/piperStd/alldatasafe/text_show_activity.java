@@ -49,12 +49,8 @@ public class text_show_activity extends AppCompatActivity {
         flipper.setDisplayedChild(6);
         navigation.getMenu().getItem(0).setChecked(true);
         Intent intent = getIntent();
-        String login = intent.getStringExtra("LOGIN");
-        String password = intent.getStringExtra("PASSWORD");
-        byte service = intent.getByteExtra("SERVICE", AuthServices.UNKNOWN);
-        byte[] key = intent.getByteArrayExtra("KEY");
-        AuthNode node = new AuthNode(service, login, password);
+        String encrypted = intent.getStringExtra("ENCRYPTED");
         text_field = findViewById(R.id.text_field);
-        text_field.setText(node.getEncryptedString(key));
+        text_field.setText(encrypted);
     }
 }

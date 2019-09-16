@@ -67,12 +67,8 @@ public class qr_show_activity extends AppCompatActivity implements View.OnClickL
         try
         {
             Intent intent = getIntent();
-            String login = intent.getStringExtra("LOGIN");
-            String password = intent.getStringExtra("PASSWORD");
-            byte service = intent.getByteExtra("SERVICE", AuthServices.UNKNOWN);
-            byte[] key = intent.getByteArrayExtra("KEY");
-            AuthNode node = new AuthNode(service, login, password);
-            barcode = QrHelper.genBarcode(node.getEncryptedString(key));
+            String encrypted = intent.getStringExtra("ENCRYPTED");
+            barcode = QrHelper.genBarcode(encrypted);
             qrImage.setImageBitmap(barcode);
         }
         catch(Exception e)

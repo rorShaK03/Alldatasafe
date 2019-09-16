@@ -11,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -26,12 +27,16 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.AuthServices;
+import com.piperStd.alldatasafe.UI.Fragments.DecryptCard;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
 import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
@@ -43,15 +48,16 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
 
     final int CAMERA_PERMISSION_ID = 0;
 
-    AppCompatImageView serviceImage = null;
-    TextView login_field;
-    TextView pass_field;
     EditText encryption_pass;
     CheckBox useNfc;
+    ScrollView scroll = null;
+    FrameLayout[] frames = new FrameLayout[10];
+    LinearLayout frags = null;
 
     public Handler handler;
     QrHelper qrHelper;
     CameraHelper camera;
+    DecryptCard[] cards = new DecryptCard[10];
 
     ViewFlipper flipper = null;
     NavigationView navigation = null;
@@ -66,6 +72,7 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
 
     byte[] key = null;
     boolean nfc_used = false;
+    int card_i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -104,13 +111,17 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
         super.onStart();
         flipper.setDisplayedChild(4);
         navigation.getMenu().getItem(1).setChecked(true);
-        login_field = findViewById(R.id.qr_login_show);
-        pass_field = findViewById(R.id.qr_password_show);
-        serviceImage = findViewById(R.id.qr_service_icon);
+        frags = findViewById(R.id.qr_frags);
         encryption_pass = findViewById(R.id.passQrDetect);
         useNfc = findViewById(R.id.qr_use_nfc);
         useNfc.setOnClickListener(this);
         qrHelper = new QrHelper();
+        for(int i = 0; i < 10; i++)
+        {
+            frames[i] = new FrameLayout(this);
+            frames[i].setId(i + 1);
+            frags.addView(frames[i]);
+        }
         handler = new Handler()
         {
 
@@ -193,7 +204,7 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    class DecryptTask extends AsyncTask<Bitmap, Void, AuthNode>
+    class DecryptTask extends AsyncTask<Bitmap, Void, AuthNode[]>
     {
         private byte[] key;
 
@@ -208,40 +219,42 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
         }
 
         @Override
-        protected AuthNode doInBackground(Bitmap[] params)
+        protected AuthNode[] doInBackground(Bitmap[] params)
         {
             String text = qrHelper.readBarcode(qr_detect_activity.super.getApplicationContext(), params[0]);
             if (text != null)
             {
-                AuthNode node = AuthNode.DecryptAndParse(text, this.key);
-                return node;
+                AuthNode[] nodes = AuthNode.DecryptAndParseArray(text, this.key);
+                return nodes;
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(AuthNode res)
+        protected void onPostExecute(AuthNode[] res)
         {
             if(res != null)
             {
-                login_field.setText(res.login);
-                pass_field.setText(res.password);
-                switch(res.service)
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                for(int i = 0; i < card_i; i++)
                 {
-                    case AuthServices.VK:
-                        serviceImage.setImageResource(R.drawable.ic_vk);
-                        break;
-                    case AuthServices.GITHUB:
-                        serviceImage.setImageResource(R.drawable.ic_github);
-                        break;
-                    case AuthServices.INSTAGRAM:
-                        serviceImage.setImageResource(R.drawable.ic_instagram);
-                        break;
-                    case AuthServices.STEAM:
-                        serviceImage.setImageResource(R.drawable.ic_steam);
-                        break;
+                    trans.remove(cards[i]);
+                    cards[i] = null;
                 }
+                card_i = 0;
+                trans.commit();
+                for(int i = 0; i < res.length; i++)
+                    addNode(res[i]);
             }
         }
+    }
+    private void addNode(AuthNode node)
+    {
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        cards[card_i] = new DecryptCard();
+        cards[card_i].setArguments(node);
+        trans.add(frames[card_i].getId(), cards[card_i]);
+        trans.commit();
+        card_i++;
     }
 }

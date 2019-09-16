@@ -70,13 +70,10 @@ public class nfc_write_activity extends AppCompatActivity {
         Intent intent = getIntent();
         switch(intent.getAction()) {
             case "authNode":
-                String login = intent.getStringExtra("LOGIN");
-                String password = intent.getStringExtra("PASSWORD");
-                byte service = intent.getByteExtra("SERVICE", AuthServices.UNKNOWN);
-                String encrypt_pass = intent.getStringExtra("ENCRYPT_PASS");
-                if(login != null && password != null && encrypt_pass != null) {
-                    AuthNode node = new AuthNode(service, login, password);
-                    string_data = node.getEncryptedString(encrypt_pass);
+                String encrypted = intent.getStringExtra("ENCRYPTED");
+                if(encrypted != null)
+                {
+                    string_data = encrypted;
                     data_type = NfcHelper.TYPE_DATA;
                 }
                 else

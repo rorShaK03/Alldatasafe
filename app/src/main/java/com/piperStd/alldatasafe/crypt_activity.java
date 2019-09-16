@@ -19,6 +19,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -81,6 +83,8 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
 
     byte[] key = new byte[0];
 
+    Handler handler = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +107,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         techList = new String[][]{NfcHelper.knownTech};
     }
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onStart()
     {
@@ -120,9 +125,6 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         add_btn.setOnClickListener(this);
         if(card_i == 0)
             addCard();
-        /*
-
-            */
     }
 
     @Override
@@ -181,41 +183,42 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view)
     {
         if(view.getId() == nextBtn.getId()) {
-
+            boolean anyEmptyField = false;
             RadioGroup place = findViewById(R.id.placeGroup);
             int placeId = place.getCheckedRadioButtonId();
             AuthNode[] nodes = new AuthNode[card_i];
             for (int i = 0; i < card_i; i++)
+            {
                 nodes[i] = cards[i].getNode();
+                if(nodes[i] == null)
+                    anyEmptyField = true;
+            }
+            if(card_i == 0)
+                anyEmptyField = true;
             byte[] key_bytes = null;
-            if (!nfc_used && !editPass.getText().toString().equals(""))
+            if (!nfc_used && !(editPass.getText().toString().length() == 0))
                 key_bytes = Crypto.getKDF(editPass.getText().toString());
             else if (nfc_used)
                 key_bytes = this.key;
-                if (nodes[0].password.length() != 0 && nodes[0].login.length() != 0 && key_bytes != null) {
+                if (!anyEmptyField && key_bytes != null)
+                {
                     String encrypted = AuthNode.getEncryptedStringFromArray(nodes, key_bytes);
-                    AuthNode.DecryptAndParseArray(encrypted, key_bytes);
-                    /*
                     switch (placeId) {
                         case R.id.radioQR:
-                            launcher.launchQRCodeActivity(service, login, password, key_bytes);
+                            launcher.launchQRCodeActivity(encrypted);
                             break;
                         case R.id.radioInternal:
-                            launcher.launchInternalShowActivity(service, login, password, key_bytes);
+                            launcher.launchInternalShowActivity(encrypted);
                             break;
                         default:
                             showException(this, "Choose place for saving");
                     }
-                } else if (login.length() == 0) {
-                    showException(this, "Login is empty");
-                } else if (password.length() == 0) {
-                    showException(this, "Password is empty");
+                } else if (anyEmptyField) {
+                    showException(this, "Empty card");
                 } else if (key_bytes == null) {
                     showException(this, "Encryption key is empty");
                 }
-                            */
             }
-        }
         else if(view.getId() == useNfc.getId())
         {
             if(useNfc.isChecked() == true)
@@ -242,6 +245,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         current.setId(card_i + 1);
         frags.addView(current);
         cards[card_i] = new CryptCard();
+        cards[card_i].setArguments(this, card_i);
         FragmentTransaction trans = getFragmentManager().beginTransaction();
         trans.add(current.getId(), cards[card_i]);
         trans.commit();
@@ -255,6 +259,25 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
                         }
                     }
         , 100);
+    }
+
+    public void deleteCard(int number)
+    {
+        //Костыль, фикс гонки добавление/удаление
+        try
+        {
+            frags.removeViewAt(number);
+            card_i--;
+            for (int i = number; i < card_i; i++) {
+                cards[i] = cards[i + 1];
+                cards[i].i--;
+            }
+            cards[card_i] = null;
+        }
+        catch(Exception e)
+        {
+
+        }
     }
 
 

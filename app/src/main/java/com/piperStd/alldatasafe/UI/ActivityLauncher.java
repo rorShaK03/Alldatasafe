@@ -26,15 +26,12 @@ public class ActivityLauncher
         this.context = context;
     }
 
-    public void launchQRCodeActivity(byte service, String login, String password, byte[] key)
+    public void launchQRCodeActivity(String encrypted)
     {
         try {
             Intent intent = new Intent(context, qr_show_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.putExtra("LOGIN", login);
-            intent.putExtra("PASSWORD", password);
-            intent.putExtra("SERVICE", service);
-            intent.putExtra("KEY", key);
+            intent.putExtra("ENCRYPTED", encrypted);
             context.startActivity(intent);
         }
         catch(Exception e)
@@ -43,15 +40,12 @@ public class ActivityLauncher
         }
     }
 
-    public void launchTextShowActivity(byte service, String login, String password, byte[] key)
+    public void launchTextShowActivity(String encrypted)
     {
         try {
             Intent intent = new Intent(context, text_show_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.putExtra("LOGIN", login);
-            intent.putExtra("PASSWORD", password);
-            intent.putExtra("SERVICE", service);
-            intent.putExtra("KEY", key);
+            intent.putExtra("ENCRYPTED", encrypted);
             context.startActivity(intent);
         }
         catch(Exception e)
@@ -60,15 +54,12 @@ public class ActivityLauncher
         }
     }
 
-    public void launchInternalShowActivity(byte service, String login, String password, byte[] key)
+    public void launchInternalShowActivity(String encrypted)
     {
         try {
             Intent intent = new Intent(context, internal_show_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.putExtra("LOGIN", login);
-            intent.putExtra("PASSWORD", password);
-            intent.putExtra("SERVICE", service);
-            intent.putExtra("KEY", key);
+            intent.putExtra("ENCRYPTED", encrypted);
             context.startActivity(intent);
         }
         catch(Exception e)
@@ -77,15 +68,12 @@ public class ActivityLauncher
         }
     }
 
-    public void launchNFCActivity(byte service, String login, String password, String encrypt_password)
+    public void launchNFCActivity(String encrypted)
     {
         try {
             Intent intent = new Intent(context, nfc_write_activity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.putExtra("LOGIN", login);
-            intent.putExtra("PASSWORD", password);
-            intent.putExtra("SERVICE", service);
-            intent.putExtra("ENCRYPT_PASS", encrypt_password);
+            intent.putExtra("ENCRYPTED", encrypted);
             context.startActivity(intent);
         }
         catch(Exception e)

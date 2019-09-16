@@ -72,12 +72,8 @@ public class internal_show_activity extends AppCompatActivity {
     {
         super.onResume();
         Intent intent = getIntent();
-        String login = intent.getStringExtra("LOGIN");
-        String password = intent.getStringExtra("PASSWORD");
-        byte service = intent.getByteExtra("SERVICE", AuthServices.UNKNOWN);
-        byte[] key = intent.getByteArrayExtra("KEY");
-        AuthNode node = new AuthNode(service, login, password);
-        new WriteTask().execute(node.getEncryptedString(key));
+        String encrypted = intent.getStringExtra("ENCRYPTED");
+        new WriteTask().execute(encrypted);
     }
 
 

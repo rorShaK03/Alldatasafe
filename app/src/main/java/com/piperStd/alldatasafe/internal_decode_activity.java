@@ -6,35 +6,34 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.Core.AuthNode;
-import com.piperStd.alldatasafe.Core.AuthServices;
+import com.piperStd.alldatasafe.UI.Fragments.CryptCard;
+import com.piperStd.alldatasafe.UI.Fragments.DecryptCard;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
-import com.piperStd.alldatasafe.utils.Files.FileHelper;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
@@ -46,16 +45,19 @@ public class internal_decode_activity extends AppCompatActivity implements View.
     NavigationView navigation = null;
     DrawerLayout drawerLayout;
 
+    ScrollView scroll = null;
+    LinearLayout frags = null;
     Button decrypt_btn;
     EditText encryption_pass;
     CheckBox useNfc;
+    FrameLayout[] frames = new FrameLayout[10];
 
-    TextView login = null;
-    TextView pass = null;
-    AppCompatImageView serviceImg = null;
 
     byte[] key = null;
     boolean nfc_used = false;
+    byte card_i = 0;
+
+    DecryptCard[] cards = new DecryptCard[10];
 
     NfcAdapter adapter = null;
     PendingIntent pending = null;
@@ -88,10 +90,15 @@ public class internal_decode_activity extends AppCompatActivity implements View.
         super.onStart();
         flipper.setDisplayedChild(9);
         navigation.getMenu().getItem(1).setChecked(true);
-        login = findViewById(R.id.internal_login_show);
-        pass = findViewById(R.id.internal_password_show);
-        serviceImg = findViewById(R.id.internal_service_icon);
         decrypt_btn = findViewById(R.id.internal_decrypt_button);
+        frags = findViewById(R.id.internal_frags);
+        scroll = findViewById(R.id.internal_scroll_view);
+        for(int i = 0; i < 10; i++)
+        {
+            frames[i] = new FrameLayout(this);
+            frames[i].setId(i + 1);
+            frags.addView(frames[i]);
+        }
         decrypt_btn.setOnClickListener(this);
         encryption_pass = findViewById(R.id.internal_encryption_pass);
         useNfc = findViewById(R.id.internal_use_nfc);
@@ -133,7 +140,10 @@ public class internal_decode_activity extends AppCompatActivity implements View.
                 }
             }
             if(key != null)
-                new ReadTask().execute();
+            {
+                ReadTask task = new ReadTask();
+                task.execute();
+            }
         }
         else if(view.getId() == useNfc.getId())
         {
@@ -154,6 +164,7 @@ public class internal_decode_activity extends AppCompatActivity implements View.
     class ReadTask extends AsyncTask<Void, Void, Void>
     {
         String FILENAME = "encrypted";
+        public AuthNode[] nodes = null;
         @Override
         public Void doInBackground(Void[] params)
         {
@@ -167,23 +178,8 @@ public class internal_decode_activity extends AppCompatActivity implements View.
                     encrypted.append(line + '\n');
                 }
                 br.close();
-                AuthNode node = AuthNode.DecryptAndParse(encrypted.toString(), key);
-                login.setText(node.login);
-                pass.setText(node.password);
-                switch (node.service) {
-                    case AuthServices.VK:
-                        serviceImg.setImageResource(R.drawable.ic_vk);
-                        break;
-                    case AuthServices.GITHUB:
-                        serviceImg.setImageResource(R.drawable.ic_github);
-                        break;
-                    case AuthServices.INSTAGRAM:
-                        serviceImg.setImageResource(R.drawable.ic_instagram);
-                        break;
-                    case AuthServices.STEAM:
-                        serviceImg.setImageResource(R.drawable.ic_steam);
-                        break;
-                }
+                AuthNode[] nodes = AuthNode.DecryptAndParseArray(encrypted.toString(), key);
+                this.nodes = nodes;
             }
             catch (Exception e)
             {
@@ -191,5 +187,33 @@ public class internal_decode_activity extends AppCompatActivity implements View.
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void v)
+        {
+            if(nodes != null)
+            {
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                for(int i = 0; i < card_i; i++)
+                {
+                    trans.remove(cards[i]);
+                    cards[i] = null;
+                }
+                card_i = 0;
+                trans.commit();
+                for(int i = 0; i < nodes.length; i++)
+                    addNode(nodes[i]);
+            }
+        }
+    }
+
+    private void addNode(AuthNode node)
+    {
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        cards[card_i] = new DecryptCard();
+        cards[card_i].setArguments(node);
+        trans.add(frames[card_i].getId(), cards[card_i]);
+        trans.commit();
+        card_i++;
     }
 }

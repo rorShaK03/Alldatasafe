@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -24,16 +23,24 @@ import com.piperStd.alldatasafe.crypt_activity;
 
 public class CryptCard extends Fragment
 {
+    public int i;
     AppCompatImageView service_icon = null;
+    AppCompatImageView close_btn = null;
     View view = null;
-    Context context = crypt_activity.context;
+    crypt_activity context = null;
     byte service = AuthServices.VK;
+
+    public void setArguments(crypt_activity context, int i)
+    {
+        this.context = context;
+        this.i = i;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.crypt_card_layout, null);
-        service_icon = view.findViewById(R.id.service_icon);
+        service_icon = view.findViewById(R.id.card_service_icon);
         service_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +80,15 @@ public class CryptCard extends Fragment
                 helper.show();
             }
         });
+        close_btn = view.findViewById(R.id.img_close);
+        close_btn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                context.deleteCard(i);
+            }
+        });
         return view;
     }
 
@@ -82,6 +98,9 @@ public class CryptCard extends Fragment
         EditText password_field = view.findViewById(R.id.password_field);
         String login = login_field.getText().toString();
         String password = password_field.getText().toString();
-        return new AuthNode(service, login, password);
+        if(login.length() != 0 && password.length() != 0)
+            return new AuthNode(service, login, password);
+        else
+            return null;
     }
 }
