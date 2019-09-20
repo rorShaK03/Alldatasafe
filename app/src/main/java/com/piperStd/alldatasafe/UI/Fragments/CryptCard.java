@@ -25,7 +25,8 @@ public class CryptCard extends Fragment
 {
     public int i;
     AppCompatImageView service_icon = null;
-    AppCompatImageView close_btn = null;
+    public AppCompatImageView close_btn = null;
+    public boolean closable = true;
     View view = null;
     crypt_activity context = null;
     byte service = AuthServices.VK;
@@ -40,6 +41,8 @@ public class CryptCard extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.crypt_card_layout, null);
+        if(container.getChildCount() != 0)
+            container.removeAllViews();
         service_icon = view.findViewById(R.id.card_service_icon);
         service_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +84,8 @@ public class CryptCard extends Fragment
             }
         });
         close_btn = view.findViewById(R.id.img_close);
+        if(!closable)
+            close_btn.setVisibility(View.INVISIBLE);
         close_btn.setOnClickListener(new View.OnClickListener()
         {
             @Override

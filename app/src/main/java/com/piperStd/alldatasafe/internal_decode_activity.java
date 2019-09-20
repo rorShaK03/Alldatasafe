@@ -135,7 +135,7 @@ public class internal_decode_activity extends AppCompatActivity implements View.
                 if (!encryption_pass.getText().toString().equals("")) {
                     key = Crypto.getKDF(encryption_pass.getText().toString());
                 } else {
-                    showException(this, "Empty encryption password!");
+                    showException(this, "Введите пароль или приложите NFC-ключ!");
                     return;
                 }
             }

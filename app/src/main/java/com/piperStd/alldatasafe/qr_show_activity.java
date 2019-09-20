@@ -73,7 +73,7 @@ public class qr_show_activity extends AppCompatActivity implements View.OnClickL
         }
         catch(Exception e)
         {
-            showException(this, "Unable to start qr_show_activity: " + e.getMessage());
+            showException(this, "Неизвестная ошибка создания QR-кода!");
         }
 
     }

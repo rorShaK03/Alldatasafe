@@ -1,6 +1,9 @@
 package com.piperStd.alldatasafe.utils.Others;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import java.nio.charset.StandardCharsets;
 
@@ -19,6 +22,13 @@ public class tools
     public static void showException(String tag, String info)
     {
         Log.e(tag, info);
+    }
+
+    public static void showException(Context context, String info)
+    {
+        Toast toast = Toast.makeText(context, info, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 0);
+        toast.show();
     }
 
     public static <T> boolean contains(T[] arr, T obj)

@@ -34,6 +34,7 @@ import androidx.appcompat.widget.PopupMenu;
 import android.app.Fragment;
 
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -70,6 +71,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     ScrollView scroll;
 
     LinearLayout frags;
+    FrameLayout[] frames = new FrameLayout[10];
 
     CryptCard[] cards = new CryptCard[10];
     byte card_i = 0;
@@ -124,7 +126,10 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         nextBtn.setOnClickListener(this);
         add_btn.setOnClickListener(this);
         if(card_i == 0)
+        {
             addCard();
+            //cards[0].closable = false;
+        }
     }
 
     @Override
@@ -211,12 +216,12 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
                             launcher.launchInternalShowActivity(encrypted);
                             break;
                         default:
-                            showException(this, "Choose place for saving");
+                            showException(this, "Выберите место для хранения данных!");
                     }
                 } else if (anyEmptyField) {
-                    showException(this, "Empty card");
+                    showException(this, "Хотя бы одна учетная запись заполнена не до конца!");
                 } else if (key_bytes == null) {
-                    showException(this, "Encryption key is empty");
+                    showException(this, "Введите пароль или воспользуйтесь NFC-ключом!");
                 }
             }
         else if(view.getId() == useNfc.getId())
@@ -234,31 +239,48 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         }
         else if(view.getId() == add_btn.getId())
         {
-            addCard();
+            if(card_i < 10)
+                addCard();
+            else
+                showException(this, "Добавлено максимальное число записей!");
         }
 
     }
 
     private void addCard()
     {
-        final FrameLayout current = new FrameLayout(this);
-        current.setId(card_i + 1);
-        frags.addView(current);
-        cards[card_i] = new CryptCard();
-        cards[card_i].setArguments(this, card_i);
-        FragmentTransaction trans = getFragmentManager().beginTransaction();
-        trans.add(current.getId(), cards[card_i]);
-        trans.commit();
-        card_i++;
-        current.setFocusable(true);
-        current.setFocusableInTouchMode(true);
-        scroll.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            scroll.fullScroll(View.FOCUS_DOWN);
-                        }
-                    }
-        , 100);
+        try
+        {
+            final FrameLayout current = new FrameLayout(this);
+            current.setId(card_i + 1);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+            current.setLayoutParams(params);
+            frames[card_i] = current;
+            frags.addView(frames[card_i]);
+            cards[card_i] = new CryptCard();
+            cards[card_i].setArguments(this, card_i);
+            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            trans.add(frames[card_i].getId(), cards[card_i]);
+            trans.commit();
+            card_i++;
+            scroll.postDelayed(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       scroll.fullScroll(View.FOCUS_DOWN);
+                                   }
+                               }
+                    , 100);
+            /*
+            if (card_i != 1) {
+                cards[0].closable = true;
+                cards[0].close_btn.setVisibility(View.VISIBLE);
+            }
+            */
+        }
+        catch(Exception e)
+        {
+
+        }
     }
 
     public void deleteCard(int number)
@@ -266,13 +288,24 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         //Костыль, фикс гонки добавление/удаление
         try
         {
-            frags.removeViewAt(number);
+            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            trans.remove(cards[number]);
+            trans.commit();
+            frags.removeView(frames[number]);
+            //frags.removeViewAt(number);
             card_i--;
             for (int i = number; i < card_i; i++) {
                 cards[i] = cards[i + 1];
                 cards[i].i--;
             }
             cards[card_i] = null;
+            /*
+            if(card_i == 1)
+            {
+                cards[0].closable = false;
+                cards[0].close_btn.setVisibility(View.INVISIBLE);
+            }
+            */
         }
         catch(Exception e)
         {

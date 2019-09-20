@@ -114,7 +114,7 @@ public class text_decode_activity  extends AppCompatActivity implements Navigati
                 key = Crypto.getKDF(encryption_pass.getText().toString());
             }
             else {
-                showException(this, "Empty encryption password!");
+                showException(this, "Введите пароль или воспользуйтесь NFC-ключом!");
                 return;
             }
         }

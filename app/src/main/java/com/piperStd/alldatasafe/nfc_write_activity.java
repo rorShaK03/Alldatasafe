@@ -120,7 +120,7 @@ public class nfc_write_activity extends AppCompatActivity {
             }
             catch(Exception e)
             {
-                showException(this, e.getMessage());
+                showException(this, "Неизвестная ошибка!");
             }
         }
     }
