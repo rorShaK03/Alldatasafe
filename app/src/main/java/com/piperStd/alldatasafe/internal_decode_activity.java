@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -32,6 +33,7 @@ import com.piperStd.alldatasafe.UI.Fragments.DecryptCard;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
+import com.piperStd.alldatasafe.utils.Files.FileHelper;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -141,7 +143,7 @@ public class internal_decode_activity extends AppCompatActivity implements View.
             }
             if(key != null)
             {
-                ReadTask task = new ReadTask();
+                ReadTask task = new ReadTask(this);
                 task.execute();
             }
         }
@@ -165,20 +167,20 @@ public class internal_decode_activity extends AppCompatActivity implements View.
     {
         String FILENAME = "encrypted";
         public AuthNode[] nodes = null;
+        Context context = null;
+
+        public ReadTask(Context context)
+        {
+            this.context = context;
+        }
         @Override
         public Void doInBackground(Void[] params)
         {
             try
             {
-                StringBuilder encrypted = new StringBuilder();
-                String line;
-                BufferedReader br = new BufferedReader(new FileReader(getApplicationContext().getFilesDir() + "/" + FILENAME));
-                while((line = br.readLine()) != null)
-                {
-                    encrypted.append(line + '\n');
-                }
-                br.close();
-                AuthNode[] nodes = AuthNode.DecryptAndParseArray(encrypted.toString(), key);
+                FileHelper file_helper = new FileHelper(context);
+                String encrypted = file_helper.read_from_encrypted();
+                AuthNode[] nodes = AuthNode.DecryptAndParseArray(encrypted, key);
                 this.nodes = nodes;
             }
             catch (Exception e)

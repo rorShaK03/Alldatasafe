@@ -24,6 +24,7 @@ import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
+import com.piperStd.alldatasafe.utils.Files.FileHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,7 +33,6 @@ import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class internal_show_activity extends AppCompatActivity {
 
-    String FILENAME = "encrypted";
 
     ViewFlipper flipper = null;
     MainNavigationListener navListener = null;
@@ -73,31 +73,33 @@ public class internal_show_activity extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         String encrypted = intent.getStringExtra("ENCRYPTED");
-        new WriteTask().execute(encrypted);
+        new WriteTask(this).execute(encrypted);
     }
 
 
     class WriteTask extends AsyncTask<String, Void, Void>
     {
+        Context context = null;
+        public WriteTask(Context context)
+        {
+            this.context = context;
+        }
         @Override
         public Void doInBackground(String[] params)
         {
             try
             {
-                FileOutputStream outStream = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-                outStream.write(params[0].getBytes());
-                outStream.close();
-                Log.e("writed", params[0]);
+                FileHelper file_helper = new FileHelper(context);
+                file_helper.write_to_encrypted(params[0]);
                 internal_state.setText("Запись успешно произведена!");
                 internal_state.setTextColor(Color.GREEN);
                 Thread.sleep(1000);
                 finish();
             }
             catch (Exception e)
-            {
-                showException(this, e.getMessage());
-                Log.e("Couldn`t write", e.getMessage());
-            }
+        {
+            showException(this, e.getMessage());
+        }
             return null;
         }
     }

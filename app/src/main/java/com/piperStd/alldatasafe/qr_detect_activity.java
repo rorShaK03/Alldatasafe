@@ -13,18 +13,22 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -42,7 +46,10 @@ import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
 import com.piperStd.alldatasafe.utils.Detectors.QrHelper;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
+import com.piperStd.alldatasafe.utils.Files.FileHelper;
 import com.piperStd.alldatasafe.utils.camera.CameraHelper;
+
+import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class qr_detect_activity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,6 +57,7 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
 
     EditText encryption_pass;
     CheckBox useNfc;
+    Button save_btn = null;
     ScrollView scroll = null;
     FrameLayout[] frames = new FrameLayout[10];
     LinearLayout frags = null;
@@ -73,6 +81,7 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
     byte[] key = null;
     boolean nfc_used = false;
     int card_i = 0;
+    public String encryptedText = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -114,6 +123,8 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
         frags = findViewById(R.id.qr_frags);
         encryption_pass = findViewById(R.id.passQrDetect);
         useNfc = findViewById(R.id.qr_use_nfc);
+        save_btn = findViewById(R.id.qr_save_btn);
+        save_btn.setOnClickListener(this);
         useNfc.setOnClickListener(this);
         qrHelper = new QrHelper();
         for(int i = 0; i < 10; i++)
@@ -179,15 +190,21 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view)
     {
-        if(useNfc.isChecked() == true)
+        switch(view.getId())
         {
-            encryption_pass.setText("");
-            encryption_pass.setEnabled(false);
-        }
-        else
-        {
-            nfc_used = false;
-            encryption_pass.setEnabled(true);
+            case R.id.qr_use_nfc:
+            if (useNfc.isChecked() == true) {
+                encryption_pass.setText("");
+                encryption_pass.setEnabled(false);
+            } else {
+                nfc_used = false;
+                encryption_pass.setEnabled(true);
+            }
+            break;
+
+            case R.id.qr_save_btn:
+                if(encryptedText != null)
+                    new WriteTask(this).execute(encryptedText);
         }
     }
 
@@ -222,8 +239,9 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
         protected AuthNode[] doInBackground(Bitmap[] params)
         {
             String text = qrHelper.readBarcode(qr_detect_activity.super.getApplicationContext(), params[0]);
-            if (text != null)
+            if (text != null && !text.equals(encryptedText))
             {
+                encryptedText = text;
                 AuthNode[] nodes = AuthNode.DecryptAndParseArray(text, this.key);
                 return nodes;
             }
@@ -248,6 +266,30 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
             }
         }
     }
+
+    class WriteTask extends AsyncTask<String, Void, Void>
+    {
+        Context context = null;
+        public WriteTask(Context context)
+        {
+            this.context = context;
+        }
+        @Override
+        public Void doInBackground(String[] params)
+        {
+            try
+            {
+                FileHelper file_helper = new FileHelper(context);
+                file_helper.write_to_encrypted(params[0]);
+            }
+            catch (Exception e)
+            {
+                showException(this, e.getMessage());
+            }
+            return null;
+        }
+    }
+
     private void addNode(AuthNode node)
     {
         FragmentTransaction trans = getFragmentManager().beginTransaction();

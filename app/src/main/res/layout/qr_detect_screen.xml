@@ -54,21 +54,19 @@
 
                 <TextureView
                     android:id="@+id/camera_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_width="290dp"
+                    android:layout_height="290dp" />
 
 
         </FrameLayout>
 
         <ScrollView
             android:id="@+id/qr_scroll_view"
-            android:layout_width="310dp"
-            android:layout_height="146dp"
+            android:layout_width="297dp"
+            android:layout_height="144dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout">
@@ -101,6 +99,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
+        <Button
+            android:id="@+id/qr_save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Сохранить"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qr_scroll_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

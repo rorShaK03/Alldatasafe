@@ -1,8 +1,11 @@
 package com.piperStd.alldatasafe.Core;
 
+import android.util.Base64;
 import android.util.Log;
+import android.util.Xml;
 
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
+import com.piperStd.alldatasafe.utils.Others.tools;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -63,64 +66,64 @@ public class AuthNode
 
     public String getEncryptedString(String password)
     {
-        byte[] typeNameBytes = typeName.getBytes(StandardCharsets.UTF_8);
-        byte[] finalData = new byte[data.length + typeNameBytes.length + 1];
-        for(int i = 0; i < typeNameBytes.length; i++)
-            finalData[i] = typeNameBytes[i];
+        byte[] type_name_bytes = typeName.getBytes(StandardCharsets.UTF_8);
+        byte[] final_data = new byte[data.length + type_name_bytes.length + 1];
+        for(int i = 0; i < type_name_bytes.length; i++)
+            final_data[i] = type_name_bytes[i];
 
-        finalData[typeNameBytes.length] = separator;
+        final_data[type_name_bytes.length] = separator;
 
         for(int i = 0; i < data.length; i++)
-            finalData[i + typeNameBytes.length + 1] = data[i];
-        Crypto crypto = new Crypto(finalData, password);
+            final_data[i + type_name_bytes.length + 1] = data[i];
+        Crypto crypto = new Crypto(final_data, password);
         crypto.encrypt();
         return crypto.genBase64FromEncryptedData();
     }
 
     public String getEncryptedString(byte[] key)
     {
-        byte[] typeNameBytes = typeName.getBytes(StandardCharsets.UTF_8);
-        byte[] finalData = new byte[data.length + typeNameBytes.length + 1];
-        for(int i = 0; i < typeNameBytes.length; i++)
-            finalData[i] = typeNameBytes[i];
+        byte[] type_name_bytes = typeName.getBytes(StandardCharsets.UTF_8);
+        byte[] final_data = new byte[data.length + type_name_bytes.length + 1];
+        for(int i = 0; i < type_name_bytes.length; i++)
+            final_data[i] = type_name_bytes[i];
 
-        finalData[typeNameBytes.length] = separator;
+        final_data[type_name_bytes.length] = separator;
 
         for(int i = 0; i < data.length; i++)
-            finalData[i + typeNameBytes.length + 1] = data[i];
-        Crypto crypto = new Crypto(finalData);
+            final_data[i + type_name_bytes.length + 1] = data[i];
+        Crypto crypto = new Crypto(final_data);
         crypto.encrypt(key);
         return crypto.genBase64FromEncryptedData();
     }
 
     public static String getEncryptedStringFromArray(AuthNode[] arr, byte[] key)
     {
-        byte[] typeNameBytes = typeName.getBytes(StandardCharsets.UTF_8);
-        int length = typeNameBytes.length;
+        byte[] type_name_bytes = typeName.getBytes(StandardCharsets.UTF_8);
+        int length = type_name_bytes.length;
         for(int i = 0; i < arr.length; i++)
             length += arr[i].data.length + 1;
         length++;
-        byte[] finalData = new byte[length];
-        finalData[0] = (byte)arr.length;
-        for(int i = 1; i < typeNameBytes.length + 1; i++)
-            finalData[i] = typeNameBytes[i - 1];
+        byte[] final_data = new byte[length];
+        final_data[0] = (byte)arr.length;
+        for(int i = 1; i < type_name_bytes.length + 1; i++)
+            final_data[i] = type_name_bytes[i - 1];
 
-        finalData[typeNameBytes.length + 1] = separator;
+        final_data[type_name_bytes.length + 1] = separator;
         int counter = 0;
         for(int j = 0; j < arr.length; j++)
         {
             for (int i = 0; i < arr[j].data.length; i++)
             {
-                finalData[counter + typeNameBytes.length + 2] = arr[j].data[i];
+                final_data[counter + type_name_bytes.length + 2] = arr[j].data[i];
                 counter++;
             }
             if(j != arr.length - 1)
             {
-                finalData[counter + typeNameBytes.length + 2] = nodes_separator;
+                final_data[counter + type_name_bytes.length + 2] = nodes_separator;
                 counter++;
             }
         }
-        Crypto crypto = new Crypto(finalData);
+        Crypto crypto = new Crypto(final_data);
         crypto.encrypt(key);
         return crypto.genBase64FromEncryptedData();
     }
@@ -133,27 +136,28 @@ public class AuthNode
             return null;
         byte[] typeBytes = new byte[typeName.length()];
         byte length = decrypted[0];
+        decrypted = tools.offsetToStartArray(decrypted, 1);
         AuthNode[] nodes = new AuthNode[length];
-        int i = 1;
-        while(i < typeName.length() + 1 && decrypted[i] != separator)
+        int i = 0;
+        while(i < typeName.length() && decrypted[i] != separator)
         {
-            typeBytes[i - 1] = decrypted[i];
+            typeBytes[i] = decrypted[i];
             i++;
         }
         if(new String(typeBytes, StandardCharsets.UTF_8).equals(typeName))
         {
-            int counter = 0;
+            decrypted = tools.offsetToStartArray(decrypted, typeName.length() + 1);
             for(int j = 0; j < length; j++)
             {
                 int k = 0;
-                while(k + typeName.length() + 2 < decrypted.length && decrypted[k + typeName.length() + 2] != nodes_separator)
+                while(k  < decrypted.length && decrypted[k] != nodes_separator)
                     k++;
                 byte[] node = new byte[k];
                 for(int l = 0; l < k; l++)
                 {
-                    node[l] = decrypted[counter + l + typeName.length() + 2];
+                    node[l] = decrypted[l];
                 }
-                counter += k + 1;
+                decrypted = tools.offsetToStartArray(decrypted,k + 1);
                 nodes[j] = new AuthNode(node);
             }
             return nodes;

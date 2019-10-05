@@ -20,6 +20,7 @@ import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.R;
 import com.piperStd.alldatasafe.crypt_activity;
+import com.piperStd.alldatasafe.utils.Others.tools;
 
 public class CryptCard extends Fragment
 {
@@ -51,28 +52,8 @@ public class CryptCard extends Fragment
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId())
-                        {
-                            case R.id.vk_item:
-                                service_icon.setImageResource(R.drawable.ic_vk);
-                                service = AuthServices.VK;
-                                return true;
-                            case R.id.github_item:
-                                service_icon.setImageResource(R.drawable.ic_github);
-                                service = AuthServices.GITHUB;
-                                return true;
-                            case R.id.instagram_item:
-                                service_icon.setImageResource(R.drawable.ic_instagram);
-                                service = AuthServices.INSTAGRAM;
-                                return true;
-                            case R.id.steam_item:
-                                service_icon.setImageResource(R.drawable.ic_steam);
-                                service = AuthServices.STEAM;
-                                return true;
-                            default:
-                                return false;
-
-                        }
+                        service = tools.processServiceChoice(item.getItemId(), service_icon);
+                        return (service != -1);
                     }
                 });
                 MenuInflater inflater = popup.getMenuInflater();
@@ -108,4 +89,6 @@ public class CryptCard extends Fragment
         else
             return null;
     }
+
+
 }

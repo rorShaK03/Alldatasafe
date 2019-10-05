@@ -5,6 +5,11 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatImageView;
+
+import com.piperStd.alldatasafe.Core.AuthServices;
+import com.piperStd.alldatasafe.R;
+
 import java.nio.charset.StandardCharsets;
 
 public class tools
@@ -53,13 +58,71 @@ public class tools
         return res;
     }
 
-    public static byte[] offsetToEndArray(byte[] arr, int n, int offset)
+
+    public static byte[] offsetToStartArray(byte[] arr, int offset)
     {
-        byte[] res = new byte[arr.length];
-        for(int i = 0; i < n; i++)
+        if(offset < arr.length)
         {
-            res[i + offset] = arr[i];
+            byte[] res = new byte[arr.length - offset];
+            for (int i = 0; i < arr.length - offset; i++) {
+                res[i] = arr[i + offset];
+            }
+            return res;
         }
-        return res;
+        else
+            return null;
+    }
+
+    public static void processService(int service, AppCompatImageView img)
+    {
+        switch (service)
+        {
+            case AuthServices.VK:
+                img.setImageResource(R.drawable.ic_vk);
+                break;
+            case AuthServices.GITHUB:
+                img.setImageResource(R.drawable.ic_github);
+                break;
+            case AuthServices.INSTAGRAM:
+                img.setImageResource(R.drawable.ic_instagram);
+                break;
+            case AuthServices.STEAM:
+                img.setImageResource(R.drawable.ic_steam);
+                break;
+            case AuthServices.FACEBOOK:
+                img.setImageResource(R.drawable.ic_facebook);
+                break;
+            case AuthServices.SDO:
+                img.setImageResource(R.drawable.ic_sdo);
+                break;
+        }
+    }
+
+    public static byte processServiceChoice(int id, AppCompatImageView img)
+    {
+        switch(id)
+        {
+            case R.id.vk_item:
+                img.setImageResource(R.drawable.ic_vk);
+                return AuthServices.VK;
+            case R.id.github_item:
+                img.setImageResource(R.drawable.ic_github);
+                return AuthServices.GITHUB;
+            case R.id.instagram_item:
+                img.setImageResource(R.drawable.ic_instagram);
+                return AuthServices.INSTAGRAM;
+            case R.id.steam_item:
+                img.setImageResource(R.drawable.ic_steam);
+                return AuthServices.STEAM;
+            case R.id.facebook_item:
+                img.setImageResource(R.drawable.ic_facebook);
+                return AuthServices.FACEBOOK;
+            case R.id.sdo_item:
+                img.setImageResource(R.drawable.ic_sdo);
+                return AuthServices.SDO;
+            default:
+                return -1;
+
+        }
     }
 }

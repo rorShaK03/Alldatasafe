@@ -25,5 +25,18 @@
         android:icon="@drawable/ic_steam"
         />
 
+    <item
+        android:id="@+id/facebook_item"
+        android:title="Facebook"
+        android:icon="@drawable/ic_facebook"
+        />
+
+    <item
+        android:id="@+id/sdo_item"
+        android:title="sdo.1580.ru"
+        android:icon="@drawable/ic_sdo"
+        />
+
+
 
 </menu>
