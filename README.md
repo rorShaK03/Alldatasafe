@@ -1,7 +1,7 @@
 # Alldatasafe
-An android application for encrypted data saving on external memory devices
+An android application for encrypted data saving on external memory devices and decrypting by nfc-tags
 
-## We are planning to add support of encrypting and saving data on:
+## I am planning to add support of encrypting and saving data on:
 
 * NFC-devices
 * Paper(with help of QR-codes or base64 encoded data)
