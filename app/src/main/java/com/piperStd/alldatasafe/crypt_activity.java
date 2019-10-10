@@ -103,6 +103,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigation.setNavigationItemSelectedListener(navListener);
+        // Переменные для взаимодействия с NFC
         adapter = NfcAdapter.getDefaultAdapter(this);
         pending = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         filters = new IntentFilter[]{NfcHelper.createNdefFilter(NfcHelper.TYPE_KEY), NfcHelper.createTechFilter()};
@@ -114,17 +115,20 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     protected void onStart()
     {
         super.onStart();
+        //Установка элементов интерфейса
         flipper.setDisplayedChild(0);
         navigation.getMenu().getItem(0).setChecked(true);
         editPass = findViewById(R.id.editPass);
         nextBtn = findViewById(R.id.next_btn);
         add_btn = findViewById(R.id.add_btn);
         useNfc = findViewById(R.id.use_nfc);
+        // Контейнер для карточек для ввода логина и пароля
         frags = findViewById(R.id.crypt_frags);
         scroll = findViewById(R.id.crypt_scroll);
         useNfc.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
         add_btn.setOnClickListener(this);
+        // Если нет ни одной карточки создаем одну
         if(card_i == 0)
         {
             addCard();
@@ -136,6 +140,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     protected void onResume()
     {
         super.onResume();
+        // Если ест поддержка NFC, включаем обработчик
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION_NFCF)) {
             adapter.enableForegroundDispatch(this, pending, filters, techList);
         }
@@ -145,6 +150,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     protected void onPause()
     {
         super.onPause();
+        // Выключаем обработчик NFC
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION_NFCF)) {
             adapter.disableForegroundDispatch(this);
         }
@@ -154,23 +160,28 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     protected void onStop()
     {
         super.onStop();
+        // При выходе закрываем боковое меню
         drawerLayout.closeDrawers();
     }
 
     @Override
     protected void onNewIntent(Intent intent)
     {
+        // Если поднесен NFC-тег
         if(intent.hasExtra(NfcAdapter.EXTRA_TAG))
         {
+            // Читаем ключ с тега
             NfcHelper helper = new NfcHelper(intent.getExtras());
             this.key = Base64.decode(helper.readTag(), Base64.DEFAULT);
             editPass.setText("");
             editPass.setEnabled(false);
+            // Ставим галочку NFC-ключ
             useNfc.setChecked(true);
             nfc_used = true;
         }
     }
 
+    //При нажатии кнопки "назад", закрываем меню
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -187,27 +198,37 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view)
     {
+        // Если нажата кнопка "Продолжить"
         if(view.getId() == nextBtn.getId()) {
             boolean anyEmptyField = false;
+            // Узнаем, куда пользователь хочет сохранить
             RadioGroup place = findViewById(R.id.placeGroup);
             int placeId = place.getCheckedRadioButtonId();
+            // Преобразуем ввод в массив AuthNode
             AuthNode[] nodes = new AuthNode[card_i];
             for (int i = 0; i < card_i; i++)
             {
                 nodes[i] = cards[i].getNode();
+                //Если вернулась пустая карточка
                 if(nodes[i] == null)
                     anyEmptyField = true;
             }
+            // Если ни одной карточки
             if(card_i == 0)
                 anyEmptyField = true;
+            // Получаем ключ для шифрования
             byte[] key_bytes = null;
+            // Если пользователь использует пароль для шифрования
             if (!nfc_used && !(editPass.getText().toString().length() == 0))
                 key_bytes = Crypto.getKDF(editPass.getText().toString());
+            Если использовал NFC-ключ
             else if (nfc_used)
                 key_bytes = this.key;
                 if (!anyEmptyField && key_bytes != null)
                 {
+                    // Получаем строку с шифрованным массивом AuthNode
                     String encrypted = AuthNode.getEncryptedStringFromArray(nodes, key_bytes);
+                    // И сохраняем
                     switch (placeId) {
                         case R.id.radioQR:
                             launcher.launchQRCodeActivity(encrypted);
@@ -224,8 +245,10 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
                     showException(this, "Введите пароль или воспользуйтесь NFC-ключом!");
                 }
             }
+
         else if(view.getId() == useNfc.getId())
         {
+            // Если нажата галочка "NFC-ключ"
             if(useNfc.isChecked() == true)
             {
                 editPass.setText("");
@@ -237,6 +260,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
                 editPass.setEnabled(true);
             }
         }
+        // Если нажата кнопка "Добавить"
         else if(view.getId() == add_btn.getId())
         {
             if(card_i < 10)
@@ -247,22 +271,31 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    // Функция для добавления новой карточки
     private void addCard()
     {
         try
         {
+            // Создаем новый контейнер для фрагмента
             final FrameLayout current = new FrameLayout(this);
+            // Устанавливаем ему id
             current.setId(card_i + 1);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
             current.setLayoutParams(params);
+            // Скидываем в массив для таких контейнеров
             frames[card_i] = current;
+            // Добавляем в основной контейнер
             frags.addView(frames[card_i]);
+            //Создаем новую карточку(фрагмент)
             cards[card_i] = new CryptCard();
             cards[card_i].setArguments(this, card_i);
+            Выводим карточку в интерфейс
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.add(frames[card_i].getId(), cards[card_i]);
             trans.commit();
+            // Увеличиваем счетчик
             card_i++;
+            // Прокручивание контейнера в самый низ
             scroll.postDelayed(new Runnable() {
                                    @Override
                                    public void run() {
@@ -283,11 +316,13 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    // Функция для удаления карточки
     public void deleteCard(int number)
     {
         //Костыль, фикс гонки добавление/удаление
         try
         {
+            // 
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.remove(cards[number]);
             trans.commit();
