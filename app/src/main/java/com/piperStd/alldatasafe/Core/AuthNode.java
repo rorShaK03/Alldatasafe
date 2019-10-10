@@ -64,6 +64,7 @@ public class AuthNode
         }
     }
 
+    /*
     public String getEncryptedString(String password)
     {
         byte[] type_name_bytes = typeName.getBytes(StandardCharsets.UTF_8);
@@ -95,6 +96,7 @@ public class AuthNode
         crypto.encrypt(key);
         return crypto.genBase64FromEncryptedData();
     }
+    */
 
     public static String getEncryptedStringFromArray(AuthNode[] arr, byte[] key)
     {

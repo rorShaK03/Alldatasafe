@@ -182,9 +182,9 @@ public class qr_detect_activity extends AppCompatActivity implements View.OnClic
             encryption_pass.setEnabled(false);
             useNfc.setChecked(true);
             nfc_used = true;
-            if (camera != null && !camera.isOpen() && camera.couldBeOpened)
-                camera.openCamera();
         }
+        if (camera != null && !camera.isOpen() && camera.couldBeOpened)
+            camera.openCamera();
     }
 
     @Override

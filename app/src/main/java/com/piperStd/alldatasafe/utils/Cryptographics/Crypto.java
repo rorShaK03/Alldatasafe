@@ -218,21 +218,5 @@ public class Crypto {
         return Base64.encodeToString(genEncryptedDataArr(), Base64.DEFAULT);
     }
 
-    public String genStringFromDecrypted()
-    {
-        if(data != null)
-        {
-            return new String(data, StandardCharsets.UTF_8);
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    public Credentials getCredentials()
-    {
-        return credentials;
-    }
 }
 

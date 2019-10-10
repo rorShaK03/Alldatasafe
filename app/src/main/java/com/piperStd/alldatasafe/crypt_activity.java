@@ -42,15 +42,14 @@ import android.widget.ViewFlipper;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.*;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.material.navigation.NavigationView;
 import com.piperStd.alldatasafe.Core.AuthNode;
-import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
 import com.piperStd.alldatasafe.UI.Fragments.CryptCard;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
+import com.piperStd.alldatasafe.utils.Others.tools;
 
 
 public class crypt_activity extends AppCompatActivity implements View.OnClickListener{
@@ -63,6 +62,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     DrawerLayout drawerLayout;
     ActivityLauncher launcher = null;
     MainNavigationListener navListener = null;
+    ActionBarDrawerToggle toggle = null;
 
     EditText editPass;
     CheckBox useNfc;
@@ -99,9 +99,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         navListener = new MainNavigationListener(this, drawerLayout);
         navigation = findViewById(R.id.nav_view);
         setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         navigation.setNavigationItemSelectedListener(navListener);
         adapter = NfcAdapter.getDefaultAdapter(this);
         pending = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -114,21 +112,28 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     protected void onStart()
     {
         super.onStart();
-        flipper.setDisplayedChild(0);
-        navigation.getMenu().getItem(0).setChecked(true);
-        editPass = findViewById(R.id.editPass);
-        nextBtn = findViewById(R.id.next_btn);
-        add_btn = findViewById(R.id.add_btn);
-        useNfc = findViewById(R.id.use_nfc);
-        frags = findViewById(R.id.crypt_frags);
-        scroll = findViewById(R.id.crypt_scroll);
-        useNfc.setOnClickListener(this);
-        nextBtn.setOnClickListener(this);
-        add_btn.setOnClickListener(this);
-        if(card_i == 0)
+        try {
+            drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
+            flipper.setDisplayedChild(0);
+            navigation.getMenu().getItem(0).setChecked(true);
+            editPass = findViewById(R.id.editPass);
+            nextBtn = findViewById(R.id.next_btn);
+            add_btn = findViewById(R.id.add_btn);
+            useNfc = findViewById(R.id.use_nfc);
+            frags = findViewById(R.id.crypt_frags);
+            scroll = findViewById(R.id.crypt_scroll);
+            useNfc.setOnClickListener(this);
+            nextBtn.setOnClickListener(this);
+            add_btn.setOnClickListener(this);
+            if (card_i == 0) {
+                addCard();
+                //cards[0].closable = false;
+            }
+        }
+        catch(Exception e)
         {
-            addCard();
-            //cards[0].closable = false;
+            tools.showException(this, e.getMessage());
         }
     }
 

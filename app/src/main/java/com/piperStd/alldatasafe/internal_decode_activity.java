@@ -52,14 +52,19 @@ public class internal_decode_activity extends AppCompatActivity implements View.
     Button decrypt_btn;
     EditText encryption_pass;
     CheckBox useNfc;
+    CheckBox edit_mode_chx;
     FrameLayout[] frames = new FrameLayout[10];
 
 
     byte[] key = null;
     boolean nfc_used = false;
+    boolean edit_mode = false;
     byte card_i = 0;
 
     DecryptCard[] cards = new DecryptCard[10];
+    CryptCard[] edit_cards = new CryptCard[10];
+    AuthNode[] nodes = new AuthNode[10];
+    int node_c = 0;
 
     NfcAdapter adapter = null;
     PendingIntent pending = null;
@@ -95,16 +100,19 @@ public class internal_decode_activity extends AppCompatActivity implements View.
         decrypt_btn = findViewById(R.id.internal_decrypt_button);
         frags = findViewById(R.id.internal_frags);
         scroll = findViewById(R.id.internal_scroll_view);
-        for(int i = 0; i < 10; i++)
-        {
-            frames[i] = new FrameLayout(this);
-            frames[i].setId(i + 1);
-            frags.addView(frames[i]);
-        }
+        edit_mode_chx = findViewById(R.id.edit_chx);
+        nodesInit();
         decrypt_btn.setOnClickListener(this);
         encryption_pass = findViewById(R.id.internal_encryption_pass);
         useNfc = findViewById(R.id.internal_use_nfc);
         useNfc.setOnClickListener(this);
+        edit_mode_chx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edit_mode_chx.isChecked()) edit_mode = true;
+                else edit_mode = false;
+            }
+        });
     }
 
     @Override
@@ -112,6 +120,16 @@ public class internal_decode_activity extends AppCompatActivity implements View.
         super.onResume();
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION_NFCF)) {
             adapter.enableForegroundDispatch(this, pending, filters, techList);
+        }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        if(edit_mode)
+        {
+
         }
     }
 
@@ -163,6 +181,7 @@ public class internal_decode_activity extends AppCompatActivity implements View.
 
     }
 
+
     class ReadTask extends AsyncTask<Void, Void, Void>
     {
         String FILENAME = "encrypted";
@@ -195,18 +214,33 @@ public class internal_decode_activity extends AppCompatActivity implements View.
         {
             if(nodes != null)
             {
-                FragmentTransaction trans = getFragmentManager().beginTransaction();
-                for(int i = 0; i < card_i; i++)
-                {
-                    trans.remove(cards[i]);
-                    cards[i] = null;
-                }
-                card_i = 0;
-                trans.commit();
-                for(int i = 0; i < nodes.length; i++)
-                    addNode(nodes[i]);
+                addNodes(nodes);
             }
         }
+    }
+
+    private void nodesInit()
+    {
+        for(int i = 0; i < 10; i++)
+        {
+            frames[i] = new FrameLayout(this);
+            frames[i].setId(i + 1);
+            frags.addView(frames[i]);
+        }
+    }
+
+    private void addNodes(AuthNode[] nodes)
+    {
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        for(int i = 0; i < card_i; i++)
+        {
+            trans.remove(cards[i]);
+            cards[i] = null;
+        }
+        card_i = 0;
+        trans.commit();
+        for(int i = 0; i < nodes.length; i++)
+            addNode(nodes[i]);
     }
 
     private void addNode(AuthNode node)
@@ -218,4 +252,16 @@ public class internal_decode_activity extends AppCompatActivity implements View.
         trans.commit();
         card_i++;
     }
+
+    /*
+    private void addEditNode(AuthNode node)
+    {
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        edit_cards[card_i] = new CryptCard();
+        edit_cards[card_i].setArguments(node);
+        trans.add(frames[card_i].getId(), edit_cards[card_i]);
+        trans.commit();
+        card_i++;
+    }
+    */
 }
