@@ -8,12 +8,10 @@ import android.widget.Toast;
 import com.piperStd.alldatasafe.crypt_activity;
 import com.piperStd.alldatasafe.internal_decode_activity;
 import com.piperStd.alldatasafe.internal_show_activity;
-import com.piperStd.alldatasafe.nfc_decode_activity;
 import com.piperStd.alldatasafe.nfc_write_activity;
 import com.piperStd.alldatasafe.qr_detect_activity;
 import com.piperStd.alldatasafe.qr_show_activity;
 import com.piperStd.alldatasafe.decrypt_activity;
-import com.piperStd.alldatasafe.text_decode_activity;
 import com.piperStd.alldatasafe.text_show_activity;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
@@ -104,6 +102,7 @@ public class ActivityLauncher
         }
     }
 
+    /*
     public void launchNfcDecodeActivity()
     {
         try {
@@ -116,6 +115,7 @@ public class ActivityLauncher
             showException(this, e.getMessage());
         }
     }
+    */
 
     public void launchCryptActivity()
     {
@@ -143,6 +143,7 @@ public class ActivityLauncher
         }
     }
 
+    /*
     public void launchTextDecodeActivity()
     {
         try {
@@ -155,6 +156,7 @@ public class ActivityLauncher
             showException(this, e.getMessage());
         }
     }
+    */
 
     public void launchInternalDecodeActivity()
     {

@@ -30,6 +30,7 @@ import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
+/*
 public class text_decode_activity  extends AppCompatActivity implements NavigationView.OnClickListener {
 
     ViewFlipper flipper = null;
@@ -138,3 +139,4 @@ public class text_decode_activity  extends AppCompatActivity implements Navigati
 
     }
 }
+*/

@@ -20,21 +20,21 @@ public class FileHelper
 {
     private Context context;
     String ENC_FILENAME = "encrypted.dat";
+    String QR_FILENAME = "image.jpg";
 
     public FileHelper(Context context)
     {
         this.context = context;
     }
 
-    public Uri saveFileInternal(ByteArrayOutputStream stream, String filename)
+    public Uri saveFileInternal(ByteArrayOutputStream stream)
     {
         File cachePath = new File(context.getCacheDir(), "images");
         cachePath.mkdir();
-        Log.d("file", cachePath.getAbsolutePath());
         FileOutputStream outStream;
         try
         {
-            outStream = new FileOutputStream(cachePath + "/image.jpg");
+            outStream = new FileOutputStream(cachePath + "/" + QR_FILENAME);
             outStream.write(stream.toByteArray());
             outStream.close();
 
@@ -43,7 +43,7 @@ public class FileHelper
         {
             showException(this, e.getMessage());
         }
-        return FileProvider.getUriForFile(context, "com.piperStd.alldatasafe.fileprovider", new File(cachePath, "image.jpg"));
+        return FileProvider.getUriForFile(context, "com.piperStd.alldatasafe.fileprovider", new File(cachePath, QR_FILENAME));
     }
 
     public boolean write_to_encrypted(String encrypted)

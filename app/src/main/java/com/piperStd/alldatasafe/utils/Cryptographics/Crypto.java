@@ -20,19 +20,14 @@ import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
 public class Crypto {
 
-    public final byte[] salt = {};
 
+    private static final byte BLOCK_LENGTH = 16;
     public String password;
     public byte[] data;
     public byte[] encrypted;
     public byte[] decrypted;
     public boolean valid;
     private Credentials credentials;
-
-    public Crypto()
-    {
-        credentials = new Credentials();
-    }
 
     public Crypto(byte[] data, String password)
     {
@@ -47,13 +42,6 @@ public class Crypto {
         credentials = new Credentials();
     }
 
-    public Crypto(byte[] data, String password, byte[] iv)
-    {
-        this.data = data;
-        this.password = password;
-        credentials = new Credentials();
-        credentials.iv = iv;
-    }
 
     public Crypto(byte[] data, byte[] iv)
     {
@@ -62,9 +50,10 @@ public class Crypto {
         credentials.iv = iv;
     }
 
+    // Создание SHA-256 хеша по массиву байт
     private static byte[] getSHA256(byte[] data)
     {
-        MessageDigest md = null;
+        MessageDigest md;
         byte[] hash = null;
         try
         {
@@ -78,6 +67,7 @@ public class Crypto {
         return hash;
     }
 
+    // Генерация случайного 256-битного ключа
     public static byte[] keygen256()
     {
         byte[] key = new byte[32];
@@ -85,9 +75,10 @@ public class Crypto {
         return key;
     }
 
+    // Шифрование и запись шированного массива байт и вектора инициализации
     private void AES256CBC_encrypt()
     {
-        Cipher cipher = null;
+        Cipher cipher;
         try {
             cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
             SecretKey key = new SecretKeySpec(credentials.key, 0, credentials.key.length, "AES256");
@@ -101,6 +92,7 @@ public class Crypto {
         }
     }
 
+    // Расшифровка
     private boolean AES256CBC_decrypt()
     {
         Cipher cipher = null;
@@ -118,20 +110,17 @@ public class Crypto {
         return true;
     }
 
-    public void KDF(String pass)
-    {
-        credentials.key = getKDF(pass);
-    }
-
+    // Получение ключа из пароля
     public static byte[] getKDF(String pass)
     {
         byte[] passBytes = tools.toBytes(pass);
         return getSHA256(passBytes);
     }
 
+    // Инициализация ключа и шифрование
     public byte[] encrypt()
     {
-        KDF(password);
+        credentials.key = getKDF(password);
         AES256CBC_encrypt();
         data = encrypted;
         return data;
@@ -145,9 +134,10 @@ public class Crypto {
         return data;
     }
 
+    // Инициализация ключа и расшифровка
     public byte[] decrypt()
     {
-        KDF(password);
+        credentials.key = getKDF(password);
         if(AES256CBC_decrypt())
         {
             valid = true;
@@ -177,42 +167,46 @@ public class Crypto {
         return data;
     }
 
+    // Создание зашифрованного массива байт из encrypted и вектора инициализации
     public byte[] genEncryptedDataArr()
     {
-        byte[] res = new byte[data.length + credentials.iv.length];
-        for(int i = 0; i < credentials.iv.length; i++)
+        byte[] res = new byte[data.length + BLOCK_LENGTH];
+        for(int i = 0; i < BLOCK_LENGTH; i++)
         {
             res[i] = credentials.iv[i];
         }
         for(int i = 0; i < data.length; i++)
         {
-            res[i + credentials.iv.length] = data[i];
+            res[i + BLOCK_LENGTH] = data[i];
         }
         return res;
     }
 
+    // Создание объекта Crypto из зашифрованного массива байт
     private static Crypto parseEncryptedFormat(byte[] encData)
     {
-        byte[] iv = new byte[16];
-        byte[] encrypted = new byte[encData.length - 16];
-        for (int i = 0; i < 16; i++)
+        byte[] iv = new byte[BLOCK_LENGTH];
+        byte[] encrypted = new byte[encData.length - BLOCK_LENGTH];
+        for (int i = 0; i < BLOCK_LENGTH; i++)
         {
             iv[i] = encData[i];
         }
-        for (int i = 0; i < encData.length - 16; i++)
+        for (int i = 0; i < encData.length - BLOCK_LENGTH; i++)
         {
-            encrypted[i] = encData[i + 16];
+            encrypted[i] = encData[i + BLOCK_LENGTH];
         }
         return new Crypto(encrypted, iv);
 
     }
 
+    // Получение объекта Crypto из base64 строки
     public static Crypto parseBase64Encrypted(String base64)
     {
 
         return parseEncryptedFormat(Base64.decode(base64, Base64.DEFAULT));
     }
 
+    // Получение строки base64 из объекта Crypto
     public String genBase64FromEncryptedData()
     {
         return Base64.encodeToString(genEncryptedDataArr(), Base64.DEFAULT);

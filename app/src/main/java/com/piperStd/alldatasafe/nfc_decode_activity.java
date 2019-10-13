@@ -23,6 +23,7 @@ import com.piperStd.alldatasafe.UI.MainNavigationListener;
 
 import static com.piperStd.alldatasafe.utils.Others.tools.showException;
 
+    /*
 public class nfc_decode_activity extends AppCompatActivity {
 
     NfcAdapter adapter;
@@ -102,6 +103,7 @@ public class nfc_decode_activity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public void onNewIntent(Intent intent) {
         if(intent.hasExtra(NfcAdapter.EXTRA_TAG))
@@ -115,5 +117,7 @@ public class nfc_decode_activity extends AppCompatActivity {
         }
     }
 
+
 }
+    */
 

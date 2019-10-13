@@ -22,6 +22,7 @@ public class AuthNode
     private static byte nodes_separator = 0x01;
     private byte[] data;
 
+    // Создание объекта AuthNode из расшифрованного массива байт
     public AuthNode(byte[] data)
     {
         this.data = data;
@@ -44,6 +45,7 @@ public class AuthNode
         this.login = new String(loginBytes.toByteArray(), StandardCharsets.UTF_8);
     }
 
+    // Создание объекта AuthNode по логину, паролю и сервису и генерация соответствующего массива байт
     public AuthNode(byte service, String login, String password)
     {
         this.login = login;
@@ -98,6 +100,7 @@ public class AuthNode
     }
     */
 
+    // Создание шифрованного массива байт по массиву объектов AuthNode
     public static String getEncryptedStringFromArray(AuthNode[] arr, byte[] key)
     {
         byte[] type_name_bytes = typeName.getBytes(StandardCharsets.UTF_8);
@@ -130,6 +133,7 @@ public class AuthNode
         return crypto.genBase64FromEncryptedData();
     }
 
+    // Получение массива AuthNode по шифрованному массиву байт
     public static AuthNode[] DecryptAndParseArray(String encrypted, byte[] key)
     {
         Crypto crypto = Crypto.parseBase64Encrypted(encrypted);
@@ -168,6 +172,7 @@ public class AuthNode
             return null;
     }
 
+    /*
     public static AuthNode DecryptAndParse(String encrypted, String password)
     {
         Crypto crypto = Crypto.parseBase64Encrypted(encrypted);
@@ -195,6 +200,7 @@ public class AuthNode
             return null;
     }
 
+
     public static AuthNode DecryptAndParse(String encrypted, byte[] key)
     {
         Crypto crypto = Crypto.parseBase64Encrypted(encrypted);
@@ -220,5 +226,6 @@ public class AuthNode
         else
             return null;
     }
+        */
 
 }

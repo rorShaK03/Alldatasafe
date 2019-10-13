@@ -84,7 +84,7 @@ public class qr_show_activity extends AppCompatActivity implements View.OnClickL
         FileHelper fileHelper = new FileHelper(this);
         ByteArrayOutputStream fileOutStream = new ByteArrayOutputStream();
         barcode.compress(Bitmap.CompressFormat.JPEG, 100, fileOutStream);
-        Uri uri = fileHelper.saveFileInternal(fileOutStream, "barcode.jpg");
+        Uri uri = fileHelper.saveFileInternal(fileOutStream);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         shareIntent.setType(getContentResolver().getType(uri));

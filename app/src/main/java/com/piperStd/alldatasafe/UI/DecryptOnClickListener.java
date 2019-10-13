@@ -16,9 +16,11 @@ public class DecryptOnClickListener implements View.OnClickListener
             case R.id.qr_card:
                 launcher.launchQrDetectActivity();
                 break;
+                /*
             case R.id.text_card:
                 launcher.launchTextDecodeActivity();
                 break;
+                */
             case R.id.internal_card:
                 launcher.launchInternalDecodeActivity();
                 break;

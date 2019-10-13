@@ -1,6 +1,7 @@
 package com.piperStd.alldatasafe;
 
 import android.annotation.SuppressLint;
+import androidx.appcompat.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,9 +25,11 @@ import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -48,9 +51,12 @@ import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.UI.ActivityLauncher;
 import com.piperStd.alldatasafe.UI.Fragments.CryptCard;
+import com.piperStd.alldatasafe.UI.GifView;
 import com.piperStd.alldatasafe.UI.MainNavigationListener;
 import com.piperStd.alldatasafe.utils.Cryptographics.Crypto;
 import com.piperStd.alldatasafe.utils.Detectors.NFC.NfcHelper;
+
+import java.io.InputStream;
 
 
 public class crypt_activity extends AppCompatActivity implements View.OnClickListener{
@@ -69,6 +75,8 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
     Button nextBtn;
     Button add_btn;
     ScrollView scroll;
+    Toolbar toolbar;
+    ActionBarDrawerToggle toggle;
 
     LinearLayout frags;
     FrameLayout[] frames = new FrameLayout[10];
@@ -93,13 +101,13 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         context = this;
         launcher = new ActivityLauncher(this);
         setContentView(R.layout.navigate_screen);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         flipper = findViewById(R.id.viewFlipper);
         drawerLayout = findViewById(R.id.drawer_layout);
         navListener = new MainNavigationListener(this, drawerLayout);
         navigation = findViewById(R.id.nav_view);
         setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigation.setNavigationItemSelectedListener(navListener);
