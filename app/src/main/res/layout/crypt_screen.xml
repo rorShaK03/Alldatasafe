@@ -15,12 +15,12 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/str_chs_place"
+        android:textColor="#CDCACD"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:textColor="#CDCACD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,11 +58,11 @@
     <ScrollView
         android:id="@+id/crypt_scroll"
         android:layout_width="0dp"
-        android:layout_height="154dp"
+        android:layout_height="0dp"
         android:layout_marginStart="2dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="2dp"
-        android:layout_marginBottom="8dp"
+        android:background="@color/colorCardPanel"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
@@ -84,44 +84,41 @@
         android:id="@+id/textView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
         android:layout_weight="1"
         android:text="@string/encryption_pass"
         android:textColor="#CDCACD"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintEnd_toEndOf="@+id/editPass"
+        app:layout_constraintStart_toStartOf="@+id/editPass"
+        app:layout_constraintTop_toBottomOf="@+id/add_btn" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/editPass"
         android:layout_width="0dp"
         android:layout_height="47dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:ems="10"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.214"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/add_btn"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
         android:id="@+id/next_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="44dp"
         android:layout_marginBottom="8dp"
-        android:textColor="#CDCACD"
         android:text="@string/next"
+        android:textColor="#CDCACD"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/use_nfc" />
+        app:layout_constraintEnd_toEndOf="@+id/use_nfc"
+        app:layout_constraintStart_toStartOf="@+id/use_nfc"
+        app:layout_constraintTop_toBottomOf="@+id/use_nfc"
+        app:layout_constraintVertical_bias="0.68" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -134,10 +131,10 @@
         android:id="@+id/use_nfc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textColor="#CDCACD"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/use_nfc"
+        android:textColor="#CDCACD"
         app:layout_constraintStart_toStartOf="@+id/editPass"
         app:layout_constraintTop_toBottomOf="@+id/editPass" />
 
@@ -179,6 +176,14 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toTopOf="@+id/add_btn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crypt_scroll" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="142dp"
+        android:layout_height="277dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/main_blower"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/crypt_scroll" />
 

@@ -38,24 +38,14 @@
                         android:layout_height="match_parent"
                         android:background="@color/colorPrimaryDark"
                         android:elevation="4dp"
-                        app:popupTheme="@style/AppTheme.PopupOverlay">
+                        app:popupTheme="@style/AppTheme.PopupOverlay"
+                        app:titleTextColor="@color/colorAccent">
 
                         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_width="140dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="start|center_vertical">
 
-                            <ImageView
-
-                                android:id="@+id/toolbar_logo"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="left"
-                                android:scaleX="2"
-                                android:scaleY="4.5"
-                                android:src="@drawable/ic_long_logo"
-                                app:layout_constraintStart_toStartOf="parent"
-                                tools:layout_editor_absoluteY="0dp" />
 
                         </LinearLayout>
 
@@ -67,8 +57,9 @@
 
             <ViewFlipper
                 android:id="@+id/viewFlipper"
-                android:layout_width="409dp"
-                android:layout_height="646dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/appbar_coord">
