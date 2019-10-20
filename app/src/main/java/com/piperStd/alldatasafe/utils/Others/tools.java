@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.piperStd.alldatasafe.Core.AuthNode;
 import com.piperStd.alldatasafe.Core.AuthServices;
 import com.piperStd.alldatasafe.R;
 
@@ -75,8 +76,7 @@ public class tools
 
     public static void processService(int service, AppCompatImageView img)
     {
-        switch (service)
-        {
+        switch (service) {
             case AuthServices.VK:
                 img.setImageResource(R.drawable.ic_vk);
                 break;
@@ -95,13 +95,16 @@ public class tools
             case AuthServices.SDO:
                 img.setImageResource(R.drawable.ic_sdo);
                 break;
+            case AuthServices.UNKNOWN:
+                img.setImageResource(R.drawable.ic_blower);
+                break;
+
         }
     }
 
     public static byte processServiceChoice(int id, AppCompatImageView img)
     {
-        switch(id)
-        {
+        switch(id) {
             case R.id.vk_item:
                 img.setImageResource(R.drawable.ic_vk);
                 return AuthServices.VK;
@@ -120,6 +123,9 @@ public class tools
             case R.id.sdo_item:
                 img.setImageResource(R.drawable.ic_sdo);
                 return AuthServices.SDO;
+            case R.id.other_item:
+                img.setImageResource(R.drawable.ic_blower);
+                return AuthServices.UNKNOWN;
             default:
                 return -1;
 

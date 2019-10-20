@@ -2,7 +2,6 @@
 
 
 
-
     <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,69 +11,104 @@
     android:fitsSystemWindows="true"
     >
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/appbar_coord"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".crypt_activity"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/app_bar_layout"
-                style="@style/AppTheme.AppBarOverlay"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/appbar_coord"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:context=".crypt_activity">
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/app_bar_layout"
+                    style="@style/AppTheme.AppBarOverlay"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorPrimary"
-                    android:elevation="4dp"
-                    app:popupTheme="@style/AppTheme.PopupOverlay" >
+                    android:layout_height="50dp">
 
-                    <LinearLayout
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="left">
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimaryDark"
+                        android:elevation="4dp"
+                        app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                        <pl.droidsonroids.gif.GifImageView
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="140dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start|center_vertical">
 
-                            android:id="@+id/toolbar_anim"
-                            android:layout_width="75dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="left"
-                            android:src="@drawable/lol"
-                            app:layout_constraintStart_toStartOf="parent"
-                            tools:layout_editor_absoluteY="0dp" />
+                            <ImageView
 
-                    </LinearLayout>
+                                android:id="@+id/toolbar_logo"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="left"
+                                android:scaleX="2"
+                                android:scaleY="4.5"
+                                android:src="@drawable/ic_long_logo"
+                                app:layout_constraintStart_toStartOf="parent"
+                                tools:layout_editor_absoluteY="0dp" />
 
-                </androidx.appcompat.widget.Toolbar>
+                        </LinearLayout>
 
-            </com.google.android.material.appbar.AppBarLayout>
+                    </androidx.appcompat.widget.Toolbar>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                </com.google.android.material.appbar.AppBarLayout>
 
-        <ViewFlipper
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id = "@+id/viewFlipper">
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <include layout="@layout/crypt_screen" android:id = "@+id/includeCrypt"/>  <!-- 0 -->
-            <include layout="@layout/qr_code_show_screen" android:id = "@+id/includeQR"/> <!-- 1 -->
-            <include layout="@layout/nfc_write_screen" android:id = "@+id/includeNFC"/> <!-- 2 -->
-            <include layout="@layout/nfc_decode_screen" android:id = "@+id/includeNFCdecode"/> <!-- 3 -->
-            <include layout="@layout/qr_detect_screen" android:id = "@+id/includeQRdetect"/> <!-- 4 -->
-            <include layout="@layout/decrypt_screen" android:id = "@+id/includeDecrypt"/> <!-- 5 -->
-            <include layout="@layout/text_show_screen" android:id = "@+id/includeTextShow"/> <!-- 6 -->
-            <include layout="@layout/text_decode_screen" android:id = "@+id/includeTextDecode"/> <!-- 7 -->
-            <include layout="@layout/internal_show_screen" android:id = "@+id/includeInternalShow"/> <!-- 8 -->
-            <include layout="@layout/internal_decode_screen" android:id = "@+id/includeInternalDecode"/> <!-- 9 -->
+            <ViewFlipper
+                android:id="@+id/viewFlipper"
+                android:layout_width="409dp"
+                android:layout_height="646dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appbar_coord">
 
-        </ViewFlipper>
+                <include
+                    android:id="@+id/includeCrypt"
+                    layout="@layout/crypt_screen" />  <!-- 0 -->
+                <include
+                    android:id="@+id/includeQR"
+                    layout="@layout/qr_code_show_screen" /> <!-- 1 -->
+                <include
+                    android:id="@+id/includeNFC"
+                    layout="@layout/nfc_write_screen" /> <!-- 2 -->
+                <include
+                    android:id="@+id/includeNFCdecode"
+                    layout="@layout/nfc_decode_screen" /> <!-- 3 -->
+                <include
+                    android:id="@+id/includeQRdetect"
+                    layout="@layout/qr_detect_screen" /> <!-- 4 -->
+                <include
+                    android:id="@+id/includeDecrypt"
+                    layout="@layout/decrypt_screen" /> <!-- 5 -->
+                <include
+                    android:id="@+id/includeTextShow"
+                    layout="@layout/text_show_screen" /> <!-- 6 -->
+                <include
+                    android:id="@+id/includeTextDecode"
+                    layout="@layout/text_decode_screen" /> <!-- 7 -->
+                <include
+                    android:id="@+id/includeInternalShow"
+                    layout="@layout/internal_show_screen" /> <!-- 8 -->
+                <include
+                    android:id="@+id/includeInternalDecode"
+                    layout="@layout/internal_decode_screen" /> <!-- 9 -->
+
+            </ViewFlipper>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 

@@ -126,6 +126,7 @@ public class crypt_activity extends AppCompatActivity implements View.OnClickLis
         //Установка элементов интерфейса
         flipper.setDisplayedChild(0);
         navigation.getMenu().getItem(0).setChecked(true);
+        getSupportActionBar().setTitle("");
         editPass = findViewById(R.id.editPass);
         nextBtn = findViewById(R.id.next_btn);
         add_btn = findViewById(R.id.add_btn);

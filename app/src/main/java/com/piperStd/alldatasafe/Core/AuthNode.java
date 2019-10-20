@@ -17,6 +17,7 @@ public class AuthNode
     public static String typeName = "alldatasafe/auth";
     public String login;
     public String password;
+    public String service_name = "";
     public byte service;
     private static byte separator = 0x00;
     private static byte nodes_separator = 0x01;
@@ -29,7 +30,17 @@ public class AuthNode
         service = data[0];
         ByteArrayOutputStream loginBytes = new ByteArrayOutputStream();
         ByteArrayOutputStream passwordBytes = new ByteArrayOutputStream();
+        ByteArrayOutputStream serviceNameBytes = new ByteArrayOutputStream();
         int i = 1;
+        if(service == AuthServices.UNKNOWN)
+        {
+            while(i < data.length && data[i] != separator)
+            {
+                serviceNameBytes.write(data[i]);
+                i++;
+            }
+            i++;
+        }
         while(i < data.length && data[i] != separator)
         {
             loginBytes.write(data[i]);
@@ -43,6 +54,7 @@ public class AuthNode
         }
         this.password = new String(passwordBytes.toByteArray(), StandardCharsets.UTF_8);
         this.login = new String(loginBytes.toByteArray(), StandardCharsets.UTF_8);
+        this.service_name = new String(serviceNameBytes.toByteArray(), StandardCharsets.UTF_8);
     }
 
     // Создание объекта AuthNode по логину, паролю и сервису и генерация соответствующего массива байт
@@ -51,19 +63,50 @@ public class AuthNode
         this.login = login;
         this.password = password;
         this.service = service;
+        ByteArrayOutputStream data_stream = new ByteArrayOutputStream();
         byte[] loginBytes = login.getBytes(StandardCharsets.UTF_8);
         byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
         this.data = new byte[loginBytes.length + passwordBytes.length + 2];
-        this.data[0] = service;
-        for(int i = 1; i <= loginBytes.length; i++)
+        try
         {
-            data[i] = loginBytes[i - 1];
+            data_stream.write(service);
+            data_stream.write(loginBytes);
+            data_stream.write(separator);
+            data_stream.write(passwordBytes);
         }
-        data[loginBytes.length + 1] = separator;
-        for(int i = 1; i <= passwordBytes.length; i++)
+        catch(Exception e)
         {
-            data[i + loginBytes.length + 1] = passwordBytes[i - 1];
+            this.data = null;
+            return;
         }
+        this.data = data_stream.toByteArray();
+    }
+
+    public AuthNode(String service_name, String login, String password)
+    {
+        this.login = login;
+        this.password = password;
+        this.service = AuthServices.UNKNOWN;
+        this.service_name = service_name;
+        byte[] loginBytes = login.getBytes(StandardCharsets.UTF_8);
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
+        byte[] serviceNameBytes = service_name.getBytes(StandardCharsets.UTF_8);
+        ByteArrayOutputStream data_stream = new ByteArrayOutputStream();
+        try
+        {
+            data_stream.write(service);
+            data_stream.write(serviceNameBytes);
+            data_stream.write(separator);
+            data_stream.write(loginBytes);
+            data_stream.write(separator);
+            data_stream.write(passwordBytes);
+        }
+        catch(Exception e)
+        {
+            this.data = null;
+            return;
+        }
+        this.data = data_stream.toByteArray();
     }
 
     /*
@@ -103,34 +146,25 @@ public class AuthNode
     // Создание шифрованного массива байт по массиву объектов AuthNode
     public static String getEncryptedStringFromArray(AuthNode[] arr, byte[] key)
     {
+        ByteArrayOutputStream final_stream = new ByteArrayOutputStream();
         byte[] type_name_bytes = typeName.getBytes(StandardCharsets.UTF_8);
-        int length = type_name_bytes.length;
-        for(int i = 0; i < arr.length; i++)
-            length += arr[i].data.length + 1;
-        length++;
-        byte[] final_data = new byte[length];
-        final_data[0] = (byte)arr.length;
-        for(int i = 1; i < type_name_bytes.length + 1; i++)
-            final_data[i] = type_name_bytes[i - 1];
-
-        final_data[type_name_bytes.length + 1] = separator;
-        int counter = 0;
-        for(int j = 0; j < arr.length; j++)
+        try
         {
-            for (int i = 0; i < arr[j].data.length; i++)
-            {
-                final_data[counter + type_name_bytes.length + 2] = arr[j].data[i];
-                counter++;
+            final_stream.write((byte) arr.length);
+            final_stream.write(type_name_bytes);
+            final_stream.write(separator);
+            for (int j = 0; j < arr.length; j++) {
+                final_stream.write(arr[j].data);
+                final_stream.write(nodes_separator);
             }
-            if(j != arr.length - 1)
-            {
-                final_data[counter + type_name_bytes.length + 2] = nodes_separator;
-                counter++;
-            }
+            Crypto crypto = new Crypto(final_stream.toByteArray());
+            crypto.encrypt(key);
+            return crypto.genBase64FromEncryptedData();
         }
-        Crypto crypto = new Crypto(final_data);
-        crypto.encrypt(key);
-        return crypto.genBase64FromEncryptedData();
+        catch(Exception e)
+        {
+            return null;
+        }
     }
 
     // Получение массива AuthNode по шифрованному массиву байт

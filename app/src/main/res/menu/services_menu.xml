@@ -37,6 +37,12 @@
         android:icon="@drawable/ic_sdo"
         />
 
+    <item
+        android:id="@+id/other_item"
+        android:title="Другое"
+        android:icon="@drawable/ic_blower"
+        />
+
 
 
 </menu>
